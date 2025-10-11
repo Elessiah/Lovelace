@@ -25,3 +25,29 @@ services:
           - ./certbot/conf:/etc/letsencrypt
           - ./certbot/www:/var/www/certbot
         command: certonly --webroot -w /var/www/certbot --force-renewal --email vincentv.ntv@gmail.com -d love-lace.fr --agree-tos
+    mysql:
+        image: mysql:latest
+        container_name: mysql
+        environment:
+          MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+          MYSQL_DATABASE: ${MYSQL_DATABASE}
+          MYSQL_USER: ${MYSQL_USER}
+          MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        ports:
+          - "3306:3306"
+        volumes:
+          - DB_DATA:/var/lib/mysql
+
+    phpmyadmin:
+        image: phpmyadmin:latest
+        container_name: phpmyadmin
+        environment:
+          PMA_HOST: mysql
+          PMA_PORT: 3306
+        ports:
+          - "8000:80" 
+        depends_on:
+          - mysql
+
+volumes:
+  DB_DATA:

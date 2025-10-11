@@ -7,6 +7,9 @@ Création Dockerfile.nextjs
 Création dossier nginx avec le fichier nginx.conf
 Création dossier certbot
 Création .dockerignore
+Création dossier DB_DATA
+Création fichier .env
+Création fichier connexion.php
 
 Modification package.json (écoute partout et pas seulement local) : 
 "scripts": {
