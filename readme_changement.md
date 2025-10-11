@@ -18,6 +18,11 @@ Modification package.json (écoute partout et pas seulement local) :
 
 # Autres
 
+Commandes renouvellement certificat (nécessite nginx conf http only):
+docker compose down
+docker compose up -d nginx nextjs
+docker compose run --rm certbot
+
 Ancienne config locale nginx-to-next qui était OK si besoin:
 
           location / {
@@ -42,3 +47,35 @@ Ancienne config locale nginx-to-next qui était OK si besoin:
             proxy_set_header Host $host;
             proxy_cache_bypass $http_upgrade;
         }
+
+events {
+    worker_connections 1024;
+}
+
+
+HTTP ONLY:
+http {
+    server_tokens off;
+    charset utf-8;
+
+    # Serveur HTTP (pour Certbot)
+    server {
+        listen 80;
+        server_name love-lace.fr www.love-lace.fr;
+
+        # Permet à Let's Encrypt d'accéder à la validation
+        location /.well-known/acme-challenge/ {
+            root /var/www/certbot;
+        }
+
+        # Proxy vers Next.js
+        location / {
+            proxy_pass http://nextjs:9000;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
+        }
+    }
+}
