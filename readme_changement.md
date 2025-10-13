@@ -9,7 +9,21 @@ Création dossier certbot
 Création .dockerignore
 Création dossier DB_DATA
 Création fichier .env
-Création fichier connexion.php
+Création dossiers dashboard_amba, dashboard_user, login, signup, private_chat
+Création dossier api (pour la DB) avec les sous dossiers
+Création fichiers route.ts et page.tsx dans chaque dossier
+
+PAGES A AVOIR:
+Sign up
+login
+home
+dashboard user
+dashboard ambassador
+page ambassador
+private chat
+
+ROUTING dynamique (exemple récupérer un truc de cet user connected):
+/app/user/[username]
 
 Modification package.json (écoute partout et pas seulement local) : 
 "scripts": {
@@ -20,13 +34,25 @@ Modification package.json (écoute partout et pas seulement local) :
   },
 
 # Autres
+Cmd:
+npm run build
+npm run dev
+docker compose up --build
+docker compose up -d
+docker compose down
+
+Cmd rebuild all except certbot:
+docker compose up -d --build nextjs nginx mysql phpmyadmin
+
+Cmd build nextjs:
+docker compose build nextjs
 
 Commandes renouvellement certificat (nécessite nginx conf http only):
 docker compose down
 docker compose up -d nginx nextjs
 docker compose run --rm certbot
 
-Ancienne config locale nginx-to-next qui était OK si besoin:
+Ancienne config locale nginx-to-next qui était OK si besoin (partie location):
 
           location / {
             proxy_pass http://nextjs:9000;
@@ -40,7 +66,32 @@ Ancienne config locale nginx-to-next qui était OK si besoin:
             proxy_cache_bypass $http_upgrade;
         }
 
-(Config Actuelle):
+Config Actuelle:
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    server_tokens off;
+    charset utf-8;
+
+    # always redirect to https
+    server {
+        listen 80 default_server;
+
+        server_name _;
+
+        return 301 https://$host$request_uri;
+    }
+
+    server {
+        listen 443 ssl http2;
+
+        ssl_certificate /etc/letsencrypt/live/love-lace.fr/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/love-lace.fr/privkey.pem;
+
+        server_name love-lace.fr www.love-lace.fr;
 
         location / {
             proxy_pass http://nextjs:9000;
@@ -51,12 +102,17 @@ Ancienne config locale nginx-to-next qui était OK si besoin:
             proxy_cache_bypass $http_upgrade;
         }
 
+        location ~ /.well-known/acme-challenge/ {
+            root /var/www/certbot;
+        }
+    }
+}
+
+Config HTTP ONLY:
 events {
     worker_connections 1024;
 }
 
-
-HTTP ONLY:
 http {
     server_tokens off;
     charset utf-8;
