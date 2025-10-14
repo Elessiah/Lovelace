@@ -1,3 +1,13 @@
+
+// if (get status on db) = ambassadrice:
+//       <Link href="/dashboard_amba">Dashboard Ambassadrice</Link>
+// else:
+//       <Link href="/dashboard_user">Dashboard Utilisateur</Link>
+
+
+// USAGE JWT token
+
+
 "use client" 
 // 👉 Obligatoire ici : ça indique à Next.js que ce fichier s’exécute CÔTÉ NAVIGATEUR
 // (par défaut, tout dans /app est côté serveur)

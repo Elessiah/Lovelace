@@ -59,7 +59,6 @@ next-env.d.ts
 # misc
 .DS_Store
 *.pem
-readme_changement.md
 
 # debug
 npm-debug.log*

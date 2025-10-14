@@ -1,69 +1,65 @@
-"use client" 
-// 👉 Obligatoire ici : ça indique à Next.js que ce fichier s’exécute CÔTÉ NAVIGATEUR
-// (par défaut, tout dans /app est côté serveur)
+// get const to hash mdp on route
+// send confirmation mail to confirm signup
+// if status amba = send pending request to admin PAR MAIL avec les infos de l'inscription
+// send pp img to folder like IMG_DATA with name like pp_[id] then put the link of img in the DB then when GET link db it will show img (it will be on another page user/dashboard #for chatgpt: don't do the page user only this one)
+// inscription en tant que : Utilisatrice, Ambassadrice
+// Mail
+// Nom
+// Prénom
+// mdp
+// pop up pour demander confirmation par mail
+// une fois mail confirmé: OK si user
+// puis si signup as user > redirection pages listes ambassadrices
+// si signup amba > demande acceptation to admin > pop up pour leur dire en attente accept admin
+// si accepter par admin mail confirmation acceptation sur leur boite mail
 
+"use client"
 import { useState } from "react"
-// 👉 On importe useState de React pour stocker et modifier des valeurs à l’intérieur du composant
 
-// ============================
-// === COMPOSANT PRINCIPAL ===
-// ============================
-export default function Connexion() {
-  // ----------------------------
-  // 🔹 Déclaration des variables d'état (states)
-  // ----------------------------
-  // "pseudo" : contient la valeur tapée dans l'input
-  // "setPseudo" : permet de modifier cette valeur
-  const [pseudo, setPseudo] = useState("")
+export default function Signup() {
+  const [status, setStatus] = useState("Utilisateur")  // choix rôle
+  const [nom, setNom] = useState("")
+  const [prenom, setPrenom] = useState("")
+  const [email, setEmail] = useState("")
+  const [mdp, setMdp] = useState("")
+  const [pp, setPp] = useState<File | null>(null) // photo de profil
 
-  // "message" : contiendra la réponse envoyée par le serveur (ex : "Salut Vincent !")
-  // "setMessage" : pour la modifier
-  const [message, setMessage] = useState("")
-
-  // ----------------------------
-  // 🔹 Fonction qui s’exécute quand on clique sur "Envoyer"
-  // ----------------------------
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault() 
-    // 🔸 Empêche le comportement par défaut du formulaire
-    //    (sinon la page se rechargerait complètement)
+    e.preventDefault()
 
-    // 🔹 On envoie une requête HTTP POST vers notre route API "/api/connexion"
-    const res = await fetch("/api/connexion", {
-      method: "POST", // méthode HTTP
-      headers: {
-        "Content-Type": "application/json", // indique qu’on envoie du JSON
-      },
-      body: JSON.stringify({ pseudo }), 
-      // 🔸 On transforme notre objet { pseudo: "Vincent" } en texte JSON
-      //    car le corps d’une requête HTTP doit toujours être une chaîne de texte
+    const formData = new FormData()
+    formData.append("status", status)
+    formData.append("nom", nom)
+    formData.append("prenom", prenom)
+    formData.append("email", email)
+    formData.append("mdp", mdp)
+    if (pp) formData.append("pp", pp)
+
+    await fetch("/api/signup", {
+      method: "POST",
+      body: formData,
     })
-
-    // 🔹 On attend la réponse du serveur, puis on la convertit en JSON
-    const data = await res.json()
-
-    // 🔹 On stocke la valeur du message renvoyé dans notre state
-    setMessage(data.message)
   }
 
-  // ----------------------------
-  // 🔹 Ce que la page affiche
-  // ----------------------------
   return (
-    <form onSubmit={handleSubmit}>
-      {/* Champ texte lié à la variable pseudo */}
-      <input
-        type="text"
-        value={pseudo}                        // valeur actuelle du champ
-        onChange={e => setPseudo(e.target.value)} // se met à jour à chaque frappe
-        placeholder="Entre ton pseudo"        // texte grisé par défaut
-      />
+    <form onSubmit={handleSubmit} encType="multipart/form-data">
+      <h2>Inscription</h2>
 
-      {/* Bouton pour valider le formulaire */}
-      <button type="submit">Envoyer</button>
+      <label>
+        S'inscrire en tant que :
+        <select value={status} onChange={e => setStatus(e.target.value)}>
+          <option>Utilisateur</option>
+          <option>Ambassadrice</option>
+        </select>
+      </label>
 
-      {/* Si on a reçu un message du serveur, on l’affiche */}
-      {message && <p>{message}</p>}
+      <input type="text" placeholder="Nom" value={nom} onChange={e => setNom(e.target.value)} />
+      <input type="text" placeholder="Prénom" value={prenom} onChange={e => setPrenom(e.target.value)} />
+      <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
+      <input type="password" placeholder="Mot de passe" value={mdp} onChange={e => setMdp(e.target.value)} />
+      <input type="file" accept="image/*" onChange={e => setPp(e.target.files ? e.target.files[0] : null)} />
+
+      <button type="submit">S'inscrire</button>
     </form>
   )
 }

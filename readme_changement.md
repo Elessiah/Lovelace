@@ -1,19 +1,5 @@
-# Changements effectués :
-
-Création readme_changement.md
-
-Création docker-compose.yml
-Création Dockerfile.nextjs
-Création dossier nginx avec le fichier nginx.conf
-Création dossier certbot
-Création .dockerignore
-Création dossier DB_DATA
-Création fichier .env
-Création dossiers dashboard_amba, dashboard_user, login, signup, private_chat
-Création dossier api (pour la DB) avec les sous dossiers
-Création fichiers route.ts et page.tsx dans chaque dossier
-
-PAGES A AVOIR:
+# à faire:
+## pages
 Sign up
 login
 home
@@ -22,10 +8,46 @@ dashboard ambassador
 page ambassador
 private chat
 
-ROUTING dynamique (exemple récupérer un truc de cet user connected):
+almost always use use client on page . tsx
+
+changer variables env si besoin 
+
+## tuto readme
+installation node
+installation docker
+clone repo
+
+## packages
+npm install mysql2
+npm install bcrypt
+npm install bcryptjs
+npm install nodemailer
+npm install jsonwebtoken
+
+à rajouter dans package json si besoin la dépendance 
+
+## tests secu et utilisation 
+
+## dynamic route
+ROUTING dynamique (exemple récupérer un truc en fonction de l'utilisateur connecté):
 /app/user/[username]
 
-Modification package.json (écoute partout et pas seulement local) : 
+# Changements effectués :
+
+Création readme_changement.md
+Création docker-compose.yml
+Création Dockerfile.nextjs
+Création dossier nginx avec le fichier nginx.conf
+Création dossier certbot
+Création .dockerignore
+Création dossier DB_DATA
+Création fichier .env
+Création dossiers dashboard_amba, dashboard_user, login, signup, chat, user, [id_user], logout, confirm
+Création dossier api (pour la DB) avec les sous dossiers
+Création fichiers route.ts et page.tsx dans les dossiers
+Création dossier lib pour la DB et MAILER
+
+# Modification package.json (écoute partout et pas seulement local) : 
 "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
@@ -34,7 +56,7 @@ Modification package.json (écoute partout et pas seulement local) :
   },
 
 # Autres
-Cmd:
+## commandes
 npm run build
 npm run dev
 docker compose up --build
@@ -52,6 +74,7 @@ docker compose down
 docker compose up -d nginx nextjs
 docker compose run --rm certbot
 
+## configs
 Ancienne config locale nginx-to-next qui était OK si besoin (partie location):
 
           location / {

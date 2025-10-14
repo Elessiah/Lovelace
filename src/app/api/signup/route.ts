@@ -1,33 +1,43 @@
-// On importe les outils fournis par Next.js pour gérer les requêtes/réponses HTTP
+// hashage
+//      const hash = await bcrypt.hash(password, id_user);
+//      await db.save({ email, hash });
+
 import { NextRequest, NextResponse } from "next/server"
+import bcrypt from "bcryptjs"
+import { db } from "@/lib/db"
+import crypto from "crypto"
+import { sendConfirmationEmail } from "@/lib/mailer"
 
-// =========================================
-// === Fonction qui s’exécute côté serveur ===
-// =========================================
-// Elle sera appelée automatiquement à chaque requête POST sur /api/connexion
 export async function POST(req: NextRequest) {
-  // 🔹 On lit le corps (body) de la requête (format JSON)
-  const { pseudo } = await req.json()
+  try {
+    // 🔹 Récupération des champs du formulaire
+    const formData = await req.formData()
+    const email = formData.get("email") as string
+    const password = formData.get("mdp") as string
+    const first_name = (formData.get("nom") as string) || ""
+    const last_name = (formData.get("prenom") as string) || ""
+    const status = (formData.get("status") as string) || "Utilisateur" // "Utilisateur" ou "Ambassadrice"
 
-  // 🔹 On prépare une réponse JSON à renvoyer
-  // Ici, on renvoie juste un message, mais en vrai tu pourrais :
-  //    - vérifier un mot de passe
-  //    - accéder à une base de données
-  //    - renvoyer des infos utilisateur
-  const response = { message: `Salut ${pseudo}, bienvenue sur le site !` }
+    // 🔹 Hash du mot de passe
+    const hash = await bcrypt.hash(password, 10)
 
-  // 🔹 On renvoie cette réponse au client
-  return NextResponse.json(response)
+    // 🔹 Générer un token unique pour la confirmation par mail
+    const token = crypto.randomBytes(32).toString("hex")
+
+    // 🔹 Insérer le nouvel utilisateur dans la table MySQL
+    const sql =
+      "INSERT INTO Users (email, first_name, last_name, hash, token, status) VALUES (?, ?, ?, ?, ?, ?)"
+    await db.execute(sql, [email, first_name, last_name, hash, token, status])
+
+    // 🔹 Envoi du mail de confirmation via OVH
+    await sendConfirmationEmail(email, token)
+
+    // Pas de message visible — succès silencieux côté frontend
+    return new Response(null, { status: 200 })
+  } catch (err) {
+    console.error("Erreur lors de l’inscription :", err)
+    return new Response(null, { status: 500 })
+  }
 }
 
-// 🔹 Hack TypeScript : certains compilateurs veulent au moins un export par fichier
-// Si tu n’écris pas ce "export {}", TypeScript peut râler
 export {}
-
-
-// hashage
-//      const hash = await bcrypt.hash(password, 12);
-//      await db.save({ email, hash });
-//      const match = await bcrypt.compare(inputPassword, user.hash);
-     
-     

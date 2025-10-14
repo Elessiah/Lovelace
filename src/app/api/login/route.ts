@@ -1,3 +1,9 @@
+//      const match = await bcrypt.compare(inputPassword, user.hash);
+
+
+
+
+
 // On importe les outils fournis par Next.js pour gérer les requêtes/réponses HTTP
 import { NextRequest, NextResponse } from "next/server"
 
@@ -25,9 +31,3 @@ export async function POST(req: NextRequest) {
 export {}
 
 
-// hashage
-//      const hash = await bcrypt.hash(password, 12);
-//      await db.save({ email, hash });
-//      const match = await bcrypt.compare(inputPassword, user.hash);
-     
-     
