@@ -34,6 +34,8 @@ export default function Home() {
       <br /><br />
       <Link href="/list">Page Ambassadrices</Link>
       <br /><br />
+      <Link href="/messagerie">Ma Messagerie</Link>
+      <br /><br />
       <Link href="/logout">Page de déconnexion</Link>
     </div>
   )
