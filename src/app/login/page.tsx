@@ -1,79 +1,86 @@
-
-// if (get status on db) = ambassadrice:
-//       <Link href="/dashboard_amba">Dashboard Ambassadrice</Link>
-// else:
-//       <Link href="/dashboard_user">Dashboard Utilisateur</Link>
-
-
-// USAGE JWT token
-
-
-"use client" 
-// 👉 Obligatoire ici : ça indique à Next.js que ce fichier s’exécute CÔTÉ NAVIGATEUR
-// (par défaut, tout dans /app est côté serveur)
+"use client"
 
 import { useState } from "react"
-// 👉 On importe useState de React pour stocker et modifier des valeurs à l’intérieur du composant
+import { useRouter } from "next/navigation"
 
-// ============================
-// === COMPOSANT PRINCIPAL ===
-// ============================
-export default function Connexion() {
-  // ----------------------------
-  // 🔹 Déclaration des variables d'état (states)
-  // ----------------------------
-  // "pseudo" : contient la valeur tapée dans l'input
-  // "setPseudo" : permet de modifier cette valeur
-  const [pseudo, setPseudo] = useState("")
-
-  // "message" : contiendra la réponse envoyée par le serveur (ex : "Salut Vincent !")
-  // "setMessage" : pour la modifier
+export default function Login() {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
   const [message, setMessage] = useState("")
+  const [resetEmail, setResetEmail] = useState("") // pour reset
+  const [resetMessage, setResetMessage] = useState("")
+  const [showReset, setShowReset] = useState(false)
+  const router = useRouter()
 
-  // ----------------------------
-  // 🔹 Fonction qui s’exécute quand on clique sur "Envoyer"
-  // ----------------------------
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault() 
-    // 🔸 Empêche le comportement par défaut du formulaire
-    //    (sinon la page se rechargerait complètement)
-
-    // 🔹 On envoie une requête HTTP POST vers notre route API "/api/connexion"
-    const res = await fetch("/api/connexion", {
-      method: "POST", // méthode HTTP
-      headers: {
-        "Content-Type": "application/json", // indique qu’on envoie du JSON
-      },
-      body: JSON.stringify({ pseudo }), 
-      // 🔸 On transforme notre objet { pseudo: "Vincent" } en texte JSON
-      //    car le corps d’une requête HTTP doit toujours être une chaîne de texte
+    e.preventDefault()
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
     })
-
-    // 🔹 On attend la réponse du serveur, puis on la convertit en JSON
     const data = await res.json()
-
-    // 🔹 On stocke la valeur du message renvoyé dans notre state
     setMessage(data.message)
+    if (data.success && data.redirect) router.push(data.redirect)
   }
 
-  // ----------------------------
-  // 🔹 Ce que la page affiche
-  // ----------------------------
+  // Fonction pour envoyer le mail de réinitialisation
+  async function handleResetPassword(e: React.FormEvent) {
+    e.preventDefault()
+    setResetMessage("")
+
+    try {
+      const res = await fetch("/api/reinit-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: resetEmail }),
+      })
+      const data = await res.json()
+      setResetMessage(data.message)
+    } catch (err) {
+      console.error(err)
+      setResetMessage("Erreur serveur lors de l'envoi du mail")
+    }
+  }
+
   return (
-    <form onSubmit={handleSubmit}>
-      {/* Champ texte lié à la variable pseudo */}
-      <input
-        type="text"
-        value={pseudo}                        // valeur actuelle du champ
-        onChange={e => setPseudo(e.target.value)} // se met à jour à chaque frappe
-        placeholder="Entre ton pseudo"        // texte grisé par défaut
-      />
+    <>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          placeholder="Entre ton email"
+        />
+        <br />
+        <input
+          type="password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          placeholder="Mot de passe"
+        />
+        <br />
+        <button type="submit">Connexion</button>
+        {message && <p>{message}</p>}
+      </form>
 
-      {/* Bouton pour valider le formulaire */}
-      <button type="submit">Envoyer</button>
+      <hr style={{ margin: "2rem 0" }} />
 
-      {/* Si on a reçu un message du serveur, on l’affiche */}
-      {message && <p>{message}</p>}
-    </form>
+      {!showReset ? (
+        <button onClick={() => setShowReset(true)}>Mot de passe oublié ?</button>
+      ) : (
+        <form onSubmit={handleResetPassword}>
+          <input
+            type="email"
+            value={resetEmail}
+            onChange={e => setResetEmail(e.target.value)}
+            placeholder="Entre ton email"
+            required
+          />
+          <button type="submit">Réinitialiser le mot de passe</button>
+          {resetMessage && <p>{resetMessage}</p>}
+        </form>
+      )}
+    </>
   )
 }

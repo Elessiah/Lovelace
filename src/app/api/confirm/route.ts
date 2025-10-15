@@ -1,23 +1,17 @@
 import { NextRequest, NextResponse } from "next/server"
-import jwt from "jsonwebtoken"
-import { db } from "@/lib/db"
+import { confirmUser } from "@/lib/mailer"
 
 export async function GET(req: NextRequest) {
-  try {
-    const token = req.nextUrl.searchParams.get("token")
-    if (!token) return NextResponse.json({ error: "Token manquant" }, { status: 400 })
+  const token = req.nextUrl.searchParams.get("token")
+  if (!token) 
+    return NextResponse.json({ success: false, message: "Token manquant" }, { status: 400 })
 
-    // Vérifie la validité du token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { email: string; status: string }
+  const result = await confirmUser(token)
 
-    // Mise à jour du compte comme "confirmé"
-    const sql = "UPDATE Users SET confirmed = 1 WHERE email = ?"
-    await db.execute(sql, [decoded.email])
-
-    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}/confirmation-success`)
-  } catch (err) {
-    console.error("Erreur confirmation :", err)
-    return NextResponse.json({ error: "Lien invalide ou expiré" }, { status: 400 })
+  if (result.success) {
+    return NextResponse.json({ success: true, message: result.message }, { status: 200 })
+  } else {
+    return NextResponse.json({ success: false, message: result.message }, { status: 400 })
   }
 }
 

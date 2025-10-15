@@ -1,1 +1,0 @@
-// only connect if connected AND status = amba

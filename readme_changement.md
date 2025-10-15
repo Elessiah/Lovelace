@@ -1,18 +1,7 @@
 # à faire:
-## pages
-Sign up
-login
-home
-dashboard user
-dashboard ambassador
-page ambassador
-private chat
-
-almost always use use client on page . tsx
-
 changer variables env si besoin 
 
-## tuto readme
+## tuto readme (secondaire)
 installation node
 installation docker
 clone repo
@@ -23,6 +12,8 @@ npm install bcrypt
 npm install bcryptjs
 npm install nodemailer
 npm install jsonwebtoken
+npm install formidable
+npm install formidable-serverless
 
 à rajouter dans package json si besoin la dépendance 
 
@@ -46,6 +37,7 @@ Création dossiers dashboard_amba, dashboard_user, login, signup, chat, user, [i
 Création dossier api (pour la DB) avec les sous dossiers
 Création fichiers route.ts et page.tsx dans les dossiers
 Création dossier lib pour la DB et MAILER
+Création dossier /public/IMG_DATA pour stockage pp
 
 # Modification package.json (écoute partout et pas seulement local) : 
 "scripts": {
