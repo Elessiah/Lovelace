@@ -70,12 +70,16 @@ UPLOADED_FILES
 docker-compose.yml
 Dockerfile.nextjs
 readme_changement.md
+src\app\components
+src\app\components\ClientWrapper.tsx
 
 ## Modifications de fichiers et dossiers:
 src\app\page.tsx
 .env
 package.json
 README.md
+eslint.config.mjs (bypass certaines règles de build)
+src\app\layout.tsx
 
 ### Modification package.json (écoute partout et pas seulement local) : 
 "scripts": {
@@ -87,11 +91,14 @@ README.md
 
 # Autres
 ## commandes
+npm install
 npm run build
 npm run dev
 docker compose up --build
 docker compose up -d
 docker compose down
+npm install --save-dev @types/jsonwebtoken
+npm install --save-dev @types/nodemailer
 
 Cmd rebuild all except certbot:
 docker compose up -d --build nextjs nginx mysql phpmyadmin

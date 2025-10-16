@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import crypto from "crypto";
 import { db } from "@/lib/db";
 
 export const runtime = "nodejs";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 Mo
-const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg", "application/pdf"];
+const ALLOWED_TYPES = ["image/png", "image/jpeg", "application/pdf"];
 const UPLOAD_DIR = path.join(process.cwd(), "UPLOADED_FILES");
 
 // 🟢 Crée le dossier si besoin
@@ -16,8 +16,13 @@ async function ensureUploadDir() {
   await fs.mkdir(UPLOAD_DIR, { recursive: true });
 }
 
+// 🟢 Typage du payload JWT
+interface JwtUserPayload extends JwtPayload {
+  id_user: number;
+}
+
 /**
- * ✅ POST → Upload fichier
+ * POST → Upload fichier
  */
 export async function POST(req: NextRequest) {
   try {
@@ -25,12 +30,12 @@ export async function POST(req: NextRequest) {
     if (!token)
       return NextResponse.json({ success: false, message: "Non connecté" }, { status: 401 });
 
-    const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtUserPayload;
     const id_user = decoded.id_user;
 
     const formData = await req.formData();
-    const file = formData.get("file") as File;
-    const id_chat = formData.get("id_chat") as string;
+    const file = formData.get("file") as File | null;
+    const id_chat = formData.get("id_chat") as string | null;
 
     if (!file || !id_chat)
       return NextResponse.json({ success: false, message: "Paramètres manquants" }, { status: 400 });
@@ -50,9 +55,14 @@ export async function POST(req: NextRequest) {
 
     await fs.writeFile(filePath, buffer);
 
-    // 🔹 Ajoute le message dans le chat 
-    const [rows]: any = await db.execute(`SELECT * FROM Chat WHERE id_chat = ?`, [id_chat]);
-    if (!rows.length) return NextResponse.json({ success: false, message: "Chat introuvable" }, { status: 404 });
+    // 🔹 Ajoute le message dans le chat
+    const [rows] = await db.execute(
+      `SELECT * FROM Chat WHERE id_chat = ?`,
+      [id_chat]
+    ) as [Array<{ encrypted_msg: string | null }>, any];
+
+    if (!rows.length)
+      return NextResponse.json({ success: false, message: "Chat introuvable" }, { status: 404 });
 
     const chat = rows[0];
     const msgs = chat.encrypted_msg ? JSON.parse(chat.encrypted_msg) : [];
@@ -63,17 +73,20 @@ export async function POST(req: NextRequest) {
       timestamp: Date.now(),
     });
 
-    await db.execute(`UPDATE Chat SET encrypted_msg = ? WHERE id_chat = ?`, [JSON.stringify(msgs), id_chat]);
+    await db.execute(
+      `UPDATE Chat SET encrypted_msg = ? WHERE id_chat = ?`,
+      [JSON.stringify(msgs), id_chat]
+    );
 
     return NextResponse.json({ success: true, message: "Fichier envoyé", fileName });
   } catch (err) {
-    console.error("[UPLOAD] erreur:", err);
+    console.error("[UPLOAD POST] erreur:", err);
     return NextResponse.json({ success: false, message: "Erreur serveur" }, { status: 500 });
   }
 }
 
 /**
- * ✅ GET → Lire un fichier (protégé par token)
+ * GET → Lire un fichier (protégé par token)
  * Exemple : /api/messagerie/upload?file=nom_du_fichier.png
  */
 export async function GET(req: NextRequest) {
@@ -101,7 +114,7 @@ export async function GET(req: NextRequest) {
       else if (ext === ".jpg" || ext === ".jpeg") contentType = "image/jpeg";
       else if (ext === ".pdf") contentType = "application/pdf";
 
-      return new NextResponse(fileBuffer, {
+      return new NextResponse(new Uint8Array(fileBuffer), {
         headers: {
           "Content-Type": contentType,
           "Content-Disposition": `inline; filename="${safeName}"`,
@@ -111,7 +124,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ success: false, message: "Fichier introuvable" }, { status: 404 });
     }
   } catch (err) {
-    console.error("[GET upload] erreur:", err);
+    console.error("[UPLOAD GET] erreur:", err);
     return NextResponse.json({ success: false, message: "Erreur serveur" }, { status: 500 });
   }
 }

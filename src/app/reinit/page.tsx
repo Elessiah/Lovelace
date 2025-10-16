@@ -9,9 +9,11 @@ export default function ReinitPage() {
   const [newPassword, setNewPassword] = useState("")
   const [message, setMessage] = useState("")
   const [loading, setLoading] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
+    setMounted(true)
     if (!token) setMessage("Token manquant ou invalide")
   }, [token])
 
@@ -37,6 +39,8 @@ export default function ReinitPage() {
       setLoading(false)
     }
   }
+
+  if (!mounted) return null // empêche le pré-rendu côté serveur
 
   return (
     <div>
