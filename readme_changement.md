@@ -1,45 +1,81 @@
-# à faire:
-changer variables env si besoin 
-
-## tuto readme (secondaire)
-installation node
-installation docker
-clone repo
-
-## packages
-npm install mysql2
-npm install bcrypt
-npm install bcryptjs
-npm install nodemailer
-npm install jsonwebtoken
-npm install formidable
-npm install formidable-serverless
-
-à rajouter dans package json si besoin la dépendance 
-
-## tests secu et utilisation 
-
-## dynamic route
-ROUTING dynamique (exemple récupérer un truc en fonction de l'utilisateur connecté):
-/app/user/[username]
-
 # Changements effectués :
+## Création de fichiers et dossiers: 
+certbot
+DB_DATA
+nginx
+nginx\nginx.conf
+public\IMG_DATA
+src\app\api\chat
+src\app\api\chat\start
+src\app\api\chat\start\route.ts
+src\app\api\chat\route.ts
+src\app\api\confirm
+src\app\api\confirm\route.ts
+src\app\api\dashboard
+src\app\api\dashboard\route.ts
+src\app\api\list
+src\app\api\list\perId
+src\app\api\list\perId\route.ts
+src\app\api\list\route.ts
+src\app\api\login
+src\app\api\login\route.ts
+src\app\api\logout
+src\app\api\logout\route.ts
+src\app\api\me
+src\app\api\me\route.ts
+src\app\api\messagerie
+src\app\api\messagerie\upload
+src\app\api\messagerie\upload\route.ts
+src\app\api\messagerie\route.ts
+src\app\api\reinit-confirm
+src\app\api\reinit-confirm\route.ts
+src\app\api\reinit-password
+src\app\api\reinit-password\route.ts
+src\app\api\resendmail
+src\app\api\resendmail\route.ts
+src\app\api\signup
+src\app\api\signup\route.ts
+src\app\api\route.ts
+src\app\chat
+src\app\chat\[id_chat]
+src\app\chat\[id_chat]\page.tsx
+src\app\confirm
+src\app\confirm\page.tsx
+src\app\dashboard
+src\app\dashboard\[user_id]
+src\app\dashboard\[user_id]\page.tsx
+src\app\list
+src\app\list\[id_user]
+src\app\list\[id_user]\page.tsx
+src\app\list\page.tsx
+src\app\login
+src\app\login\page.tsx
+src\app\logout
+src\app\logout\page.tsx
+src\app\messagerie
+src\app\messagerie\page.tsx
+src\app\reinit
+src\app\reinit\page.tsx
+src\app\signup
+src\app\signup\page.tsx
+src\lib
+src\lib\db.ts
+src\lib\mailer.ts
+src\lib\reinit.ts
+src\lib\resendmail.ts
+UPLOADED_FILES
+.dockerignore
+docker-compose.yml
+Dockerfile.nextjs
+readme_changement.md
 
-Création readme_changement.md
-Création docker-compose.yml
-Création Dockerfile.nextjs
-Création dossier nginx avec le fichier nginx.conf
-Création dossier certbot
-Création .dockerignore
-Création dossier DB_DATA
-Création fichier .env
-Création dossiers dashboard_amba, dashboard_user, login, signup, chat, user, [id_user], logout, confirm
-Création dossier api (pour la DB) avec les sous dossiers
-Création fichiers route.ts et page.tsx dans les dossiers
-Création dossier lib pour la DB et MAILER
-Création dossier /public/IMG_DATA pour stockage pp
+## Modifications de fichiers et dossiers:
+src\app\page.tsx
+.env
+package.json
+README.md
 
-# Modification package.json (écoute partout et pas seulement local) : 
+### Modification package.json (écoute partout et pas seulement local) : 
 "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",

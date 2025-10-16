@@ -1,4 +1,36 @@
 # Lovelace
+
+## Installation du projet
+
+# 1. Installation de Node.js
+# Windows / Mac : téléchargez et installez depuis https://nodejs.org/
+# Linux (Debian/Ubuntu) :
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Vérification
+node -v
+npm -v
+
+# 2. Installation de Docker
+# Windows / Mac : téléchargez et installez Docker Desktop : https://www.docker.com/products/docker-desktop
+# Linux (Debian/Ubuntu) :
+sudo apt-get update
+sudo apt-get install -y docker.io
+sudo systemctl start docker
+sudo systemctl enable docker
+
+# Vérification
+docker --version
+docker-compose --version
+
+# 3. Cloner le repository (il faut avoir accès au repo privé):
+git clone https://github.com/USERNAME/REPO.git
+cd REPO
+
+# 4. Lancer le projet avec Docker
+docker compose up -d
+
 ## Challenge Positive Future : Projet Lovelace
 
 Les métiers scientifiques souffrent d’un manque de modèles féminins visibles, ce qui limite l’inspiration des jeunes filles. Pourtant, ces figures existent, mais elles restent trop souvent invisibles. Notre plateforme leur redonne toute leur place en valorisant leurs parcours et en créant des espaces d’échange directs avec la jeunesse. L’objectif est simple : susciter des vocations et ouvrir des horizons en rendant accessibles des profils inspirants, variés et proches des réalités actuelles. Avec une navigation rapide et intuitive, nous adaptons la découverte de ces modèles aux nouvelles générations, pour les aider à trouver leur voie dès l’orientation.

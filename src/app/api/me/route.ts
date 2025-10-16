@@ -1,0 +1,48 @@
+// src/app/api/me/route.ts
+import { NextRequest, NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
+import { db } from "@/lib/db";
+
+export async function GET(req: NextRequest) {
+  try {
+    const token = req.cookies.get("token")?.value;
+    if (!token) {
+      return NextResponse.json(
+        { success: false, message: "Non connecté" },
+        { status: 401 }
+      );
+    }
+
+    const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
+    const id_user = decoded.id_user;
+
+    // Récupère les infos utilisateur depuis la base
+    const [rows]: any = await db.execute(
+      `SELECT id_user, first_name, last_name, pp_path FROM Users WHERE id_user = ?`,
+      [id_user]
+    );
+
+    if (!rows.length) {
+      return NextResponse.json(
+        { success: false, message: "Utilisateur introuvable" },
+        { status: 404 }
+      );
+    }
+
+    const user = rows[0];
+
+    return NextResponse.json({
+      success: true,
+      id_user: user.id_user,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      pp_path: user.pp_path,
+    });
+  } catch (err) {
+    console.error("[GET] /api/me error:", err);
+    return NextResponse.json(
+      { success: false, message: "Erreur serveur" },
+      { status: 500 }
+    );
+  }
+}
