@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 
 export default function ChatPage() {
   const params = useParams();
-  const id_chat = params.id_chat; // correspond maintenant au nom du fichier [id_chat]
+  const id_chat = params.id_chat;
   const [chat, setChat] = useState<any>(null);
   const [msgs, setMsgs] = useState<any[]>([]);
   const [message, setMessage] = useState("");
@@ -13,35 +13,27 @@ export default function ChatPage() {
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log("[ChatPage] useEffect triggered, id_chat =", id_chat);
-
     if (!id_chat) {
-      console.warn("[ChatPage] id_chat invalide");
       setLoading(false);
       return;
     }
 
     async function loadChat() {
       try {
-        console.log("[ChatPage] Fetching chat data...");
-        const res = await fetch(`/api/chat?id_chat=${id_chat}`);
+        const res = await fetch(`/api/chat/${id_chat}`);
         const data = await res.json();
-        console.log("[ChatPage] fetch /api/chat response:", data);
 
         if (data.success) {
           setChat(data.data);
           const parsedMsgs = data.data.encrypted_msg ? JSON.parse(data.data.encrypted_msg) : [];
-          console.log("[ChatPage] Parsed messages:", parsedMsgs);
           setMsgs(parsedMsgs);
         } else {
-          console.warn("[ChatPage] Chat non trouvé ou fetch échoué");
           setChat(null);
         }
       } catch (err) {
-        console.error("[ChatPage] Erreur fetch chat:", err);
+        console.error("Erreur fetch chat:", err);
         setChat(null);
       } finally {
-        console.log("[ChatPage] Finished loading chat");
         setLoading(false);
       }
     }
@@ -53,36 +45,31 @@ export default function ChatPage() {
     if (!message.trim() || !chat) return;
 
     try {
-      console.log("[ChatPage] Sending message:", message);
-      const res = await fetch("/api/chat", {
+      const res = await fetch(`/api/chat/${id_chat}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id_chat: chat.id_chat, message, userId: 1 }), // remplacer userId si nécessaire
+        body: JSON.stringify({ message }),
       });
       const data = await res.json();
-      console.log("[ChatPage] send message response:", data);
-
       setMessage("");
 
-      // refresh messages
-      console.log("[ChatPage] Refreshing messages...");
-      const res2 = await fetch(`/api/chat?id_chat=${id_chat}`);
-      const data2 = await res2.json();
-      console.log("[ChatPage] fetch /api/chat after send:", data2);
-
-      if (data2.success) {
-        const parsedMsgs = data2.data.encrypted_msg ? JSON.parse(data2.data.encrypted_msg) : [];
-        console.log("[ChatPage] Updated messages:", parsedMsgs);
-        setMsgs(parsedMsgs);
-        chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      if (data.success) {
+        // refresh messages
+        const res2 = await fetch(`/api/chat/${id_chat}`);
+        const data2 = await res2.json();
+        if (data2.success) {
+          const parsedMsgs = data2.data.encrypted_msg ? JSON.parse(data2.data.encrypted_msg) : [];
+          setMsgs(parsedMsgs);
+          chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        }
       }
     } catch (err) {
-      console.error("[ChatPage] Erreur lors de l'envoi du message:", err);
+      console.error("Erreur lors de l'envoi du message:", err);
       alert("Erreur lors de l'envoi du message");
     }
   };
 
-  if (loading) return <p style={{ textAlign: "center", marginTop: 40 }}>Chargement... (loading)</p>;
+  if (loading) return <p style={{ textAlign: "center", marginTop: 40 }}>Chargement...</p>;
   if (!chat) return <p style={{ textAlign: "center", marginTop: 40 }}>Chat non trouvé</p>;
 
   return (
@@ -113,7 +100,7 @@ export default function ChatPage() {
   );
 }
 
-// Déchiffrement asynchrone AES-CBC avec logs
+// Déchiffrement asynchrone AES-CBC
 function AsyncMessage({ m, chatKey, chat }: { m: any; chatKey: string; chat: any }) {
   const [text, setText] = useState("Chargement...");
 
@@ -123,7 +110,6 @@ function AsyncMessage({ m, chatKey, chat }: { m: any; chatKey: string; chat: any
       if (!chatKey) return;
 
       try {
-        console.log("[AsyncMessage] Déchiffrement message:", m);
         const keyBytes = Uint8Array.from(chatKey.match(/.{1,2}/g)!.map((b) => parseInt(b, 16)));
         const iv = Uint8Array.from(m.iv.match(/.{1,2}/g)!.map((b) => parseInt(b, 16)));
         const ciphertext = Uint8Array.from(m.msg.match(/.{1,2}/g)!.map((b) => parseInt(b, 16)));
@@ -143,11 +129,8 @@ function AsyncMessage({ m, chatKey, chat }: { m: any; chatKey: string; chat: any
         );
 
         const decryptedText = new TextDecoder().decode(decryptedBuffer);
-        console.log("[AsyncMessage] Message déchiffré:", decryptedText);
-
         if (mounted) setText(decryptedText);
-      } catch (err) {
-        console.error("[AsyncMessage] Impossible de décrypter:", err);
+      } catch {
         if (mounted) setText("Impossible de décrypter");
       }
     }

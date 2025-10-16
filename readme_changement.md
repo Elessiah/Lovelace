@@ -6,6 +6,8 @@ nginx
 nginx\nginx.conf
 public\IMG_DATA
 src\app\api\chat
+src\app\api\chat\[id_chat]
+src\app\api\chat\[id_chat]\route.ts
 src\app\api\chat\start
 src\app\api\chat\start\route.ts
 src\app\api\chat\route.ts
