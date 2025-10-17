@@ -1,69 +1,85 @@
 services:
-    mysql:
-        image: mysql:latest
-        container_name: mysql
-        environment:
-          MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-          MYSQL_DATABASE: ${MYSQL_DATABASE}
-          MYSQL_USER: ${MYSQL_USER}
-          MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-        ports:
-          - "3306:3306"
-        volumes:
-          - DB_DATA:/var/lib/mysql
+  mysql:
+    image: mysql:8.1
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
 
-    phpmyadmin:
-        image: phpmyadmin:latest
-        container_name: phpmyadmin
-        environment:
-          PMA_HOST: mysql
-          PMA_PORT: 3306
-        ports:
-          - "8000:80" 
-        depends_on:
-          - mysql
-    nextjs:
-      container_name: nextjs
-      build: 
-        context: .
-        dockerfile: Dockerfile.nextjs
-      ports:
-        - "9000:9000"
-      environment:
-          MYSQL_HOST: ${MYSQL_HOST}
-          MYSQL_USER: ${MYSQL_USER}
-          MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-          MYSQL_DATABASE: ${MYSQL_DATABASE}
-          SMTP_HOST: ${SMTP_HOST}
-          SMTP_PORT: ${SMTP_PORT}
-          SMTP_USER: ${SMTP_USER}
-          SMTP_PASS: ${SMTP_PASS}
-          NEXT_PUBLIC_URL: ${NEXT_PUBLIC_URL}
-          JWT_SECRET: ${JWT_SECRET}
-      volumes:
-        - ./public/IMG_DATA:/app/public/IMG_DATA
-        - ./UPLOADED_FILES:/app/UPLOADED_FILES
-    nginx:
-      container_name: nginx
-      image: nginx:latest
-      ports:
-          - 80:80
-          - 443:443
-      volumes:
-          - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-          - ./certbot/conf:/etc/letsencrypt
-          - ./certbot/www:/var/www/certbot
-          - ./public/IMG_DATA:/app/public/IMG_DATA  # pour que Nginx puisse servir les images
-          - ./UPLOADED_FILES:/app/UPLOADED_FILES
+  phpmyadmin:
+    image: phpmyadmin:5.2
+    container_name: phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: ${MYSQL_HOST}
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 100M
+    ports:
+      - "8000:80"
+    depends_on:
+      - mysql
 
+  nextjs:
+    container_name: nextjs
+    build:
+      context: .
+      dockerfile: Dockerfile.nextjs
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      NEXT_PUBLIC_URL: ${NEXT_PUBLIC_URL}
+      JWT_SECRET: ${JWT_SECRET}
+    volumes:
+      - ./public/IMG_DATA:/app/public/IMG_DATA
+      - ./UPLOADED_FILES:/app/UPLOADED_FILES
+    depends_on:
+      - mysql
 
-    certbot:
-        image: certbot/certbot
-        container_name: certbot
-        volumes: 
-          - ./certbot/conf:/etc/letsencrypt
-          - ./certbot/www:/var/www/certbot
-        command: certonly --webroot -w /var/www/certbot --force-renewal --email vincentv.ntv@gmail.com -d love-lace.fr --agree-tos
+  nginx:
+    container_name: nginx
+    image: nginx:1.29.2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+      - ./public/IMG_DATA:/app/public/IMG_DATA:ro
+      - ./UPLOADED_FILES:/app/UPLOADED_FILES:ro
+    depends_on:
+      - nextjs
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: /bin/sh -c
+    command: >
+      "trap exit TERM;
+      while :; do
+        certbot renew --webroot -w /var/www/certbot;
+        sleep 24h & wait $!;
+      done;"
 
 volumes:
-  DB_DATA:
+  db_data:

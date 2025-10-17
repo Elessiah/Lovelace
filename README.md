@@ -28,8 +28,25 @@ docker-compose --version
 git clone https://github.com/USERNAME/REPO.git
 cd REPO
 
-# 4. Lancer le projet avec Docker
-docker compose up -d
+# 4. Lancer le projet
+- Créer fichier local .env dans le dossier du repository avec ces paramètres:
+    MYSQL_HOST=""               <--- nom du container mysql
+    MYSQL_ROOT_PASSWORD=""      <--- mdp root mysql (le pseudo est tjr root)
+    MYSQL_DATABASE=""           <--- nom database mysql
+    MYSQL_USER=""               <--- user mysql
+    MYSQL_PASSWORD=""           <--- mdp user mysql
+
+    SMTP_HOST=""                <--- serveur d'envoi mail
+    SMTP_PORT=""                <--- port du serveur d'envoi mail
+    SMTP_USER=""                <--- mail
+    SMTP_PASS=""                <--- mdp mail
+    NEXT_PUBLIC_URL=""          <--- lien du domaine 
+
+    JWT_SECRET="mec33H.PC5V6?tb6+[]3:JQb"
+- npm install
+- npm run build
+- docker compose up -d
+- Lancer DB (localhost:8000) et importer template SQL
 
 ## Challenge Positive Future : Projet Lovelace
 

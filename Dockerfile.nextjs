@@ -1,15 +1,33 @@
-FROM node:latest 
+# Étape 1 : Builder
+FROM node:25-bookworm-slim AS builder
 
 WORKDIR /app
 
+# Copier uniquement package.json et package-lock.json pour profiter du cache
 COPY package*.json ./
 
-RUN npm install
+# Installer les dépendances de prod
+RUN npm ci --only=production
 
+# Copier tout le code source
 COPY . .
 
-ENV PORT=9000
+# Construire l’application Next.js pour la prod
+RUN npm run build
 
+# Étape 2 : Image finale
+FROM node:25-bookworm-slim
+
+WORKDIR /app
+
+# Copier le build et les dépendances depuis le builder
+COPY --from=builder /app/package*.json ./  
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+
+ENV PORT=9000
 EXPOSE 9000
 
+# Lancer l’application en mode production
 CMD ["npm", "start"]

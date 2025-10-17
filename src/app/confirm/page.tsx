@@ -16,7 +16,7 @@ export default function ConfirmPage() {
 
     fetch(`/api/confirm?token=${token}`)
       .then(res => res.json())
-      .then(data => setMessage(data.success ? "✅ Votre compte a été confirmé !" : `❌ Erreur : ${data.message}`))
+      .then(data => setMessage(data.success ? "✅ Votre compte a été confirmé ! Si vous vous êtes inscrit en tant qu'Ambassadrice, veuillez attendre qu'un administrateur accepte votre demande d'inscription." : `❌ Erreur : ${data.message}`))
       .catch(() => setMessage("❌ Erreur serveur lors de la confirmation"));
   }, [token]);
 

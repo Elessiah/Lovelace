@@ -1,7 +1,6 @@
 # Changements effectués :
 ## Création de fichiers et dossiers: 
 certbot
-DB_DATA
 nginx
 nginx\nginx.conf
 public\IMG_DATA

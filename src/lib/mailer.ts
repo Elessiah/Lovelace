@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 
 // Envoie le mail de confirmation
 export async function sendConfirmationEmail(to: string, token: string) {
-  const url = `https://love-lace.fr/confirm?token=${token}`
+  const url = `${process.env.NEXT_PUBLIC_URL}/confirm?token=${token}`
 
   await transporter.sendMail({
     from: `"Lovelace" <${process.env.SMTP_USER}>`,
