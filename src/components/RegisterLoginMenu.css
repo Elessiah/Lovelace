@@ -46,6 +46,46 @@ form label {
     margin-bottom: 8px;
 }
 
+.select-role {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.95rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #8240d8;
+    color: #fff;
+    appearance: none; /* supprime le style natif */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23111'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7' /%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.select-role:focus {
+    outline: none;
+    border-color: mediumpurple;
+    box-shadow: 0 0 0 2px rgba(147, 112, 219, 0.3);
+}
+
+/* Option styling (pour cohérence sur Chrome / Firefox) */
+.select-role option {
+    background-color: #fff;
+    color: #111;
+}
+
+/* Responsive : police et padding plus petits sur mobile */
+@media (max-width: 600px) {
+    .select-role {
+        font-size: 0.9rem;
+        padding: 8px;
+        background-position: right 8px center;
+    }
+}
+
 .div-alert-error {
     color: #b00020;
     margin-bottom: 10px;

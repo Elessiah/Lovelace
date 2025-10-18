@@ -8,7 +8,7 @@ type Props = {
     endpoint?: string; // url d'API, défaut '/api/auth/register'
 };
 
-export default function LoginMenu({ onSuccess, endpoint = '/api/auth/register' }: Props) {
+export default function LoginMenu({ onSuccess, endpoint = '/api/login' }: Props) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState<string | null>(null);

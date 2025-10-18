@@ -8,7 +8,8 @@ type Props = {
     endpoint?: string; // url d'API, défaut '/api/auth/register'
 };
 
-export default function RegisterMenu({ onSuccess, endpoint = '/api/auth/register' }: Props) {
+export default function RegisterMenu({ onSuccess, endpoint = '/api/register' }: Props) {
+    const [role, setRole] = useState('User');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirm, setConfirm] = useState('');
@@ -31,7 +32,7 @@ export default function RegisterMenu({ onSuccess, endpoint = '/api/auth/register
             const res = await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ email, password, role }),
             });
 
             if (!res.ok) {
@@ -93,6 +94,14 @@ export default function RegisterMenu({ onSuccess, endpoint = '/api/auth/register
                         required
                         className={"input-input"}
                     />
+                </div>
+
+                <div className={"input-container"}>
+                    <label htmlFor="role"  className={"input-font"}>S'inscrire en tant que :</label>
+                    <select className={"select-role"} value={role} onChange={e => setRole(e.target.value)}>
+                        <option value={"User"} selected>Aspirant.e</option>
+                        <option value={"Model"}>Ambassadrice</option>
+                    </select>
                 </div>
 
                 {error && <div role="alert" className={"div-alert-error"}>{error}</div>}
