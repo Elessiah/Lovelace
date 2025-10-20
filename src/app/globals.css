@@ -1,12 +1,16 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #F9E9EC;
+  --foreground: #0E1C36;
+  --pink: #F88DAD;
+  --cherry: #D1345B;
+  --blue: #66CED6;
+
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0E1C36;
+    --foreground: #F9E9EC;
   }
 }
 
@@ -39,4 +43,20 @@ a {
   html {
     color-scheme: dark;
   }
+}
+
+.navBar{
+  background-color: var(--cherry);
+  padding: 5%;
+}
+
+.ctaButton{
+  background-color: var(--pink);
+  color: var(--foreground);
+  border: none;
+  padding: 4% 6%;
+  border-radius: 50px;
+  font-size: 1.2em;
+  font-weight: bold;
+  cursor: pointer;
 }

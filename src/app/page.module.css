@@ -1,0 +1,60 @@
+.sectionHero{
+    padding: 10% 15%;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.sectionHero h1{
+    color: var(--cherry);
+}
+
+.sectionInfo{
+    padding: 6% 15%;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.sectionInfo h2{
+    color: var(--cherry);
+}
+
+.sectionStrengths{
+    padding: 6% 5%;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.sectionStrengths h2{
+    color: var(--cherry);
+}
+
+.sectionStrengthsMainWrapper{
+    display: flex;
+}
+
+.strengthProfile{
+    background-color: #fff;
+    padding: 15%;
+    text-align: center;
+    border-radius: 20px 0 0 0;
+
+}
+
+.strengthTestimonies{
+    background-color: var(--pink);
+    padding: 15%;
+    text-align: center;
+    border-radius: 0 0 0 20px;
+}
+
+.strengthMentoring{
+    background-color: var(--cherry);
+    padding: auto;
+    text-align: center;
+    align-content: center;
+    color: var(--background);
+    border-radius: 0 20px 20px 0;
+}
