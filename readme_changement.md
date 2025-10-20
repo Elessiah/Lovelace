@@ -3,6 +3,8 @@
 UPLOADED_FILES
 next-env.d.ts
 node_modules // .next (installés automatiquement avec npm install et npm run build)
+nginx
+certbot
 
 ## Création de fichiers et dossiers: 
 
