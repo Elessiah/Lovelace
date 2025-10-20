@@ -39,3 +39,4 @@ export default function Home() {
       <Link href="/logout">Page de déconnexion</Link>
     </div>
   )
+}

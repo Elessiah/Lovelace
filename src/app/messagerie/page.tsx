@@ -90,6 +90,15 @@ export default function MessageriePage() {
     }
   };
 
+  // Rafraîchissement automatique toutes les 1s
+  useEffect(() => {
+    if (!selectedChat) return;
+    const interval = setInterval(() => {
+      refreshChat(selectedChat.id_chat);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [selectedChat]);
+
   // Envoi d'un message texte
   const sendMessage = async () => {
     if (!message.trim() || !selectedChat) return;

@@ -75,3 +75,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# uploaded files
+UPLOADED_FILES
+
+# nginx
+nginx
+
+# certbot
+certbot

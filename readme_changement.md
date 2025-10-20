@@ -1,3 +1,13 @@
+# Liste de fichiers/dossiers à ajouter manuellement lors de l'installation du serveur web:
+.env
+UPLOADED_FILES
+next-env.d.ts
+node_modules // .next (installés automatiquement avec npm install et npm run build)
+nginx
+certbot
+
+## Création de fichiers et dossiers: 
+
 # Changements effectués :
 ## Création de fichiers et dossiers: 
 certbot
@@ -100,7 +110,7 @@ npm install --save-dev @types/jsonwebtoken
 npm install --save-dev @types/nodemailer
 
 Cmd rebuild all except certbot:
-docker compose up -d --build nextjs nginx mysql phpmyadmin
+docker compose build nextjs nginx mysql phpmyadmin
 
 Cmd build nextjs:
 docker compose build nextjs
@@ -111,7 +121,7 @@ docker compose up -d nginx nextjs
 docker compose run --rm certbot
 
 ## configs
-Ancienne config locale nginx-to-next qui était OK si besoin (partie location):
+### Ancienne config locale nginx-to-next qui était OK si besoin (partie location):
 
           location / {
             proxy_pass http://nextjs:9000;
@@ -125,8 +135,7 @@ Ancienne config locale nginx-to-next qui était OK si besoin (partie location):
             proxy_cache_bypass $http_upgrade;
         }
 
-Config Actuelle:
-
+### Config Actuelle:
 events {
     worker_connections  1024;
 }
@@ -167,7 +176,7 @@ http {
     }
 }
 
-Config HTTP ONLY:
+### Config HTTP ONLY:
 events {
     worker_connections 1024;
 }
