@@ -1,3 +1,11 @@
+# Liste de fichiers/dossiers à ajouter manuellement lors de l'installation du serveur web:
+.env
+UPLOADED_FILES
+next-env.d.ts
+node_modules // .next (installés automatiquement avec npm install et npm run build)
+
+## Création de fichiers et dossiers: 
+
 # Changements effectués :
 ## Création de fichiers et dossiers: 
 certbot
@@ -71,7 +79,7 @@ Dockerfile.nextjs
 readme_changement.md
 src\app\components
 src\app\components\ClientWrapper.tsx
- 
+
 ## Modifications de fichiers et dossiers:
 src\app\page.tsx
 .env
@@ -100,7 +108,7 @@ npm install --save-dev @types/jsonwebtoken
 npm install --save-dev @types/nodemailer
 
 Cmd rebuild all except certbot:
-docker compose up -d --build nextjs nginx mysql phpmyadmin
+docker compose build nextjs nginx mysql phpmyadmin
 
 Cmd build nextjs:
 docker compose build nextjs
