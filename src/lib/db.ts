@@ -1,22 +1,30 @@
 import mysql, { Pool } from "mysql2/promise";
 
-export const db: Pool = mysql.createPool({
-  host: process.env.MYSQL_HOST!,
-  user: process.env.MYSQL_USER!,
-  password: process.env.MYSQL_PASSWORD!,
-  database: process.env.MYSQL_DATABASE!,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-});
+let db: Pool | null = null;
 
-// 🔹 Fonction pour créer les tables si elles n'existent pas
-async function initTables() {
+export async function getDBInstance(): Promise<Pool> {
+  if (!db) {
+    db = mysql.createPool({
+      host: process.env.MYSQL_HOST!,
+      user: process.env.MYSQL_USER!,
+      password: process.env.MYSQL_PASSWORD!,
+      database: process.env.MYSQL_DATABASE!,
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0,
+    });
+    await initTables(db)
+  }
+  return db;
+}
+
+// Fonction pour créer les tables si elles n'existent pas
+async function initTables(db: Pool) {
   try {
     // Users
     await db.query(`
       CREATE TABLE IF NOT EXISTS Users (
-        id_user                       INT         AUTO_INCREMENT        PRIMARY KEY,
+        user_id                       INT         AUTO_INCREMENT        PRIMARY KEY,
         role                          TEXT        NOT NULL,
         last_name                     TEXT        NOT NULL,
         first_name                    TEXT        NOT NULL,
@@ -32,48 +40,56 @@ async function initTables() {
       CREATE TABLE IF NOT EXISTS JWT_Tokens (
         token                         TEXT        NOT NULL,
         creation_date                 DATE        NOT NULL,
-        id_user                       INT         NOT NULL,
+        user_id                       INT         NOT NULL,
         object                        TEXT        NOT NULL,
-        FOREIGN KEY (id_user) REFERENCES Users(id_user) ON DELETE CASCADE
+        FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
       )
     `);
 
     // Ambassador Info
     await db.query(`
       CREATE TABLE IF NOT EXISTS Ambassador_Info (
-        id_ambassador                 INT         AUTO_INCREMENT        PRIMARY KEY,
-        id_user                       INT         NOT NULL,
-        biographie                    TEXT        NOT NULL,
-        parcours                      TEXT        NOT NULL,
-        domaine                       TEXT        NOT NULL,
-        metier                        TEXT        NOT NULL,
-        entreprise                    TEXT        NOT NULL,
+        ambassador_id                 INT         AUTO_INCREMENT        PRIMARY KEY,
+        user_id                       INT         NOT NULL,
+        biography                     TEXT        NOT NULL,
+        background                    TEXT        NOT NULL,
+        field_id                      INT         NOT NULL,
+        job                           TEXT        NOT NULL,
+        company                       TEXT        NOT NULL,
         pitch                         TEXT        NOT NULL,
-        FOREIGN KEY (id_user) REFERENCES Users(id_user) ON DELETE CASCADE
+        FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
       )
     `);
 
-    // Projets
+    // Projects
     await db.query(`
-      CREATE TABLE IF NOT EXISTS Projets (
-        id_ambassador                 INT         NOT NULL,
-        projet_titre                  TEXT        NOT NULL,
-        projet                        TEXT        NOT NULL,
-        projet_photo_path             TEXT        NOT NULL,
-        FOREIGN KEY (id_ambassador) REFERENCES Ambassador_Info(id_ambassador) ON DELETE CASCADE
+      CREATE TABLE IF NOT EXISTS Projects (
+        ambassador_id                 INT         NOT NULL,
+        project_title                 TEXT        NOT NULL,
+        project_description           TEXT        NOT NULL,
+        project_photo_path            TEXT        NOT NULL,
+        FOREIGN KEY (ambassador_id) REFERENCES Ambassador_Info(ambassador_id) ON DELETE CASCADE
       )
     `);
 
-    // Chat
+    // Chats
     await db.query(`
-      CREATE TABLE IF NOT EXISTS Chat (
-        id_chat                       INT         AUTO_INCREMENT        PRIMARY KEY,
-        id_auteur                     INT         NOT NULL,
-        id_destinataire               INT         NOT NULL,
+      CREATE TABLE IF NOT EXISTS Chats (
+        chat_id                       INT         AUTO_INCREMENT        PRIMARY KEY,
+        author_id                     INT         NOT NULL,
+        receiver_id                   INT         NOT NULL,
         chat_key                      TEXT        NOT NULL,
         encrypted_msg                 TEXT        NOT NULL,
-        FOREIGN KEY (id_auteur) REFERENCES Users(id_user) ON DELETE CASCADE,
-        FOREIGN KEY (id_destinataire) REFERENCES Users(id_user) ON DELETE CASCADE
+        FOREIGN KEY (author_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+        FOREIGN KEY (receiver_id) REFERENCES Users(user_id) ON DELETE CASCADE
+      )
+    `);
+
+    // Fields of work
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS Fields (
+        field_id                       INT         AUTO_INCREMENT        PRIMARY KEY,
+        display_name                   INT         NOT NULL,
       )
     `);
 
@@ -82,6 +98,3 @@ async function initTables() {
     console.error("❌ Erreur lors de l'initialisation des tables :", err);
   }
 }
-
-// 🔹 Initialisation immédiate au moment de l'import
-initTables();
