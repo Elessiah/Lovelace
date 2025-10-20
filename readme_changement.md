@@ -71,7 +71,7 @@ Dockerfile.nextjs
 readme_changement.md
 src\app\components
 src\app\components\ClientWrapper.tsx
-
+ 
 ## Modifications de fichiers et dossiers:
 src\app\page.tsx
 .env
@@ -111,7 +111,7 @@ docker compose up -d nginx nextjs
 docker compose run --rm certbot
 
 ## configs
-Ancienne config locale nginx-to-next qui était OK si besoin (partie location):
+### Ancienne config locale nginx-to-next qui était OK si besoin (partie location):
 
           location / {
             proxy_pass http://nextjs:9000;
@@ -125,8 +125,7 @@ Ancienne config locale nginx-to-next qui était OK si besoin (partie location):
             proxy_cache_bypass $http_upgrade;
         }
 
-Config Actuelle:
-
+### Config Actuelle:
 events {
     worker_connections  1024;
 }
@@ -167,7 +166,7 @@ http {
     }
 }
 
-Config HTTP ONLY:
+### Config HTTP ONLY:
 events {
     worker_connections 1024;
 }

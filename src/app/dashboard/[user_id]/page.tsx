@@ -146,7 +146,7 @@ export default function DashboardPage() {
 
   return (
     <div style={{ display: "flex", gap: "2rem", padding: "2rem" }}>
-      {/* Formulaire */}
+      {/* Formulaire */} 
       <form onSubmit={handleUpdate} style={{ flex: 1 }}>
         <h2>Modifier infos</h2>
         <input type="text" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" /><br />
