@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { db } from "@/lib/db"
+import { getDBInstance } from "@/lib/db"
 import jwt from "jsonwebtoken"
 
 export async function GET(req: NextRequest) {
@@ -9,10 +9,11 @@ export async function GET(req: NextRequest) {
 
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET!)
 
+    const db = await getDBInstance();
     const [rows]: any = await db.execute(
-      "SELECT id_user FROM Users WHERE id_user = ?",
+      "SELECT user_id FROM Users WHERE user_id = ?",
       [decoded.id_user]
-    )
+    );
 
     if (!rows || rows.length === 0) return NextResponse.json({ success: false, message: "Utilisateur non trouvé" }, { status: 404 })
 

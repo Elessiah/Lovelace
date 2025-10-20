@@ -1,6 +1,6 @@
 // /app/api/resend-confirmation/route.ts
 import { NextRequest, NextResponse } from "next/server"
-import { db } from "@/lib/db"
+import { getDBInstance } from "@/lib/db"
 import { sendConfirmationEmail } from "@/lib/resendmail"
 
 export async function POST(req: NextRequest) {
@@ -12,8 +12,9 @@ export async function POST(req: NextRequest) {
     }
 
     // Vérifie que l'utilisateur existe et est en "pending"
+    const db = await getDBInstance();
     const [rows]: any = await db.execute(
-      "SELECT id_user, status FROM Users WHERE email = ?",
+      "SELECT user_id, status FROM Users WHERE email = ?",
       [email]
     )
 

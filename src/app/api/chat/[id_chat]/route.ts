@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { getDBInstance } from "@/lib/db";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 
 export async function GET(req: NextRequest) {
   try {
+    const db = await getDBInstance();
     const token = req.cookies.get("token")?.value;
     if (!token) return NextResponse.json({ success: false, message: "Non connecté" }, { status: 401 });
 
@@ -17,7 +18,7 @@ export async function GET(req: NextRequest) {
     if (isNaN(id_chat)) return NextResponse.json({ success: false, message: "Chat invalide" }, { status: 400 });
 
     const [rows]: any = await db.execute(
-      `SELECT * FROM Chat WHERE id_chat = ? AND (id_auteur = ? OR id_destinataire = ?)`,
+      `SELECT * FROM Chats WHERE chat_id = ? AND (author_id = ? OR receiver_id = ?)`,
       [id_chat, id_user, id_user]
     );
     if (rows.length === 0) return NextResponse.json({ success: false, message: "Chat non trouvé" }, { status: 404 });
@@ -45,8 +46,9 @@ export async function POST(req: NextRequest) {
     const message = body.message;
     if (!message) return NextResponse.json({ success: false, message: "Message vide" }, { status: 400 });
 
+    const db = await getDBInstance();
     const [rows]: any = await db.execute(
-      `SELECT * FROM Chat WHERE id_chat = ? AND (id_auteur = ? OR id_destinataire = ?)`,
+      `SELECT * FROM Chats WHERE chat_id = ? AND (author_id = ? OR receiver_id = ?)`,
       [id_chat, id_user, id_user]
     );
     if (rows.length === 0) return NextResponse.json({ success: false, message: "Chat non trouvé" }, { status: 404 });
@@ -64,7 +66,7 @@ export async function POST(req: NextRequest) {
     const msgs = chat.encrypted_msg ? JSON.parse(chat.encrypted_msg) : [];
     msgs.push(newMsg);
 
-    await db.execute(`UPDATE Chat SET encrypted_msg = ? WHERE id_chat = ?`, [JSON.stringify(msgs), id_chat]);
+    await db.execute(`UPDATE Chats SET encrypted_msg = ? WHERE chat_id = ?`, [JSON.stringify(msgs), id_chat]);
 
     return NextResponse.json({ success: true });
   } catch (err) {

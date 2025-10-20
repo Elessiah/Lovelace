@@ -2,20 +2,27 @@
 "use client";
 import React, { useState } from 'react';
 import "./RegisterLoginMenu.css";
+import {redirect} from "next/navigation";
+import {Eye, EyeOff} from "lucide-react";
 
 type Props = {
-    onSuccess?: () => void;
-    endpoint?: string; // url d'API, défaut '/api/auth/register'
+    targetOnSuccess: string;
+    endpoint: string; // url d'API, défaut '/api/auth/register'
 };
 
-export default function LoginMenu({ onSuccess, endpoint = '/api/login' }: Props) {
+export default function LoginMenu({ targetOnSuccess = "/", endpoint = '/api/login' }: Props) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const emailValid = (e: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+
+    if (success)
+        redirect(targetOnSuccess);
 
     async function handleSubmit(ev: React.FormEvent) {
         ev.preventDefault();
@@ -29,7 +36,7 @@ export default function LoginMenu({ onSuccess, endpoint = '/api/login' }: Props)
             const res = await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ email: email, password: password }),
             });
 
             if (!res.ok) {
@@ -42,7 +49,6 @@ export default function LoginMenu({ onSuccess, endpoint = '/api/login' }: Props)
             setSuccess(true);
             setEmail('');
             setPassword('');
-            onSuccess?.();
         } catch (e: any) {
             setError(e?.message || 'Erreur réseau');
         } finally {
@@ -70,14 +76,24 @@ export default function LoginMenu({ onSuccess, endpoint = '/api/login' }: Props)
 
                 <div className={"input-container"}>
                     <label htmlFor="password" className={"input-font"}>Mot de passe</label>
-                    <input
-                        id="password"
-                        type="password"
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        required
-                        className={"input-input"}
-                    />
+                    <div className="password-wrapper">
+                        <input
+                            id="password"
+                            type={showPassword ? "text" : "password"}
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
+                            required
+                            className="input-input"
+                        />
+                        <button
+                            type="button"
+                            className="toggle-password"
+                            onClick={() => setShowPassword(!showPassword)}
+                            aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+                        >
+                            {showPassword ? <Eye size={20}/> : <EyeOff size={20}/>}
+                        </button>
+                    </div>
                 </div>
 
                 {error && <div role="alert" className={"div-alert-error"}>{error}</div>}

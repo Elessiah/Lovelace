@@ -1,23 +1,34 @@
 // components/RegisterMenu.tsx
 "use client";
 import React, { useState } from 'react';
+import { Eye, EyeOff } from "lucide-react";
 import "./RegisterLoginMenu.css";
+import {redirect} from "next/navigation";
 
 type Props = {
-    onSuccess?: () => void;
-    endpoint?: string; // url d'API, défaut '/api/auth/register'
+    targetOnSuccess: string;
+    endpoint: string; // url d'API, défaut '/api/auth/register'
 };
 
-export default function RegisterMenu({ onSuccess, endpoint = '/api/register' }: Props) {
+export default function RegisterMenu({ targetOnSuccess = "/", endpoint = '/api/register' }: Props) {
     const [role, setRole] = useState('User');
+    const [firstname, setFirstname] = useState('');
+    const [lastname, setLastname] = useState('');
+    const [age, setAge] = useState(20);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
     const [confirm, setConfirm] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const emailValid = (e: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+
+    if (success) {
+        redirect(targetOnSuccess);
+    }
 
     async function handleSubmit(ev: React.FormEvent) {
         ev.preventDefault();
@@ -32,7 +43,7 @@ export default function RegisterMenu({ onSuccess, endpoint = '/api/register' }: 
             const res = await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password, role }),
+                body: JSON.stringify({ role: role, firstname: firstname, lastname: lastname, email: email, password: password }),
             });
 
             if (!res.ok) {
@@ -43,10 +54,13 @@ export default function RegisterMenu({ onSuccess, endpoint = '/api/register' }: 
             }
 
             setSuccess(true);
+            setRole('User');
+            setFirstname('');
+            setLastname('');
+            setAge(20);
             setEmail('');
             setPassword('');
             setConfirm('');
-            onSuccess?.();
         } catch (e: any) {
             setError(e?.message || 'Erreur réseau');
         } finally {
@@ -61,6 +75,70 @@ export default function RegisterMenu({ onSuccess, endpoint = '/api/register' }: 
             </h1>
             <form onSubmit={handleSubmit}>
                 <div className={"input-container"}>
+                    <label htmlFor="role"  className={"input-font"}>S'inscrire en tant que :</label>
+                    <select className={"select-role"} value={role} onChange={e => setRole(e.target.value)}>
+                        <option value={"User"}>Aspirante</option>
+                        <option value={"Model"}>Ambassadrice</option>
+                    </select>
+                </div>
+                {role === "Model" ?
+                    <>
+                        <div className={"input-container"}>
+                            <label htmlFor="firstname" className={"input-font"}>Prénom</label>
+                            <input
+                                id="firstname"
+                                type="text"
+                                value={firstname}
+                                onChange={e => setFirstname(e.target.value)}
+                                required
+                                className={"input-input"}
+                            />
+                        </div>
+                        <div className={"input-container"}>
+                            <label htmlFor="lastname" className={"input-font"}>Nom</label>
+                            <input
+                                id="lastname"
+                                type="text"
+                                value={lastname}
+                                onChange={e => setLastname(e.target.value)}
+                                required
+                                className={"input-input"}
+                            />
+                        </div>
+                    </>
+                    :
+                    <div className={"input-container"}>
+                        <label htmlFor={"pseudo"} className={"input-font"}>Pseudo</label>
+                        <input
+                            id={"pseudo"}
+                            type={"text"}
+                            value={firstname}
+                            onChange={e => setFirstname(e.target.value)}
+                            required
+                            className={"input-input"}
+                            />
+                    </div>
+                }
+
+                <div className={"input-container"}>
+                    <label htmlFor={"age"} className={"input-font"}>Age</label>
+                    <input
+                        type="number"
+                        id="age"
+                        name="age"
+                        value={age}
+                        onChange={e => {
+                            const n = e.target.valueAsNumber;
+                            setAge(Number.isNaN(n) ? 0 : n)
+                            }
+                        }
+                        min={0}
+                        max={120}
+                        className="input-input"
+                        />
+                </div>
+
+                <div className={"input-container"}>
                     <label htmlFor="email" className={"input-font"}>Adresse e-mail</label>
                     <input
                         id="email"
@@ -74,34 +152,46 @@ export default function RegisterMenu({ onSuccess, endpoint = '/api/register' }: 
 
                 <div className={"input-container"}>
                     <label htmlFor="password" className={"input-font"}>Mot de passe</label>
-                    <input
-                        id="password"
-                        type="password"
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        required
-                        className={"input-input"}
-                    />
+                    <div className="password-wrapper">
+                        <input
+                            id="password"
+                            type={showPassword ? "text" : "password"}
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
+                            required
+                            className="input-input"
+                        />
+                        <button
+                            type="button"
+                            className="toggle-password"
+                            onClick={() => setShowPassword(!showPassword)}
+                            aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+                        >
+                            {showPassword ? <Eye size={20}/> : <EyeOff size={20}/>}
+                        </button>
+                    </div>
                 </div>
 
                 <div className={"input-container"}>
-                    <label htmlFor="confirm" className={"input-font"}>Confirmer</label>
-                    <input
-                        id="confirm"
-                        type="password"
-                        value={confirm}
-                        onChange={e => setConfirm(e.target.value)}
-                        required
-                        className={"input-input"}
-                    />
-                </div>
-
-                <div className={"input-container"}>
-                    <label htmlFor="role"  className={"input-font"}>S'inscrire en tant que :</label>
-                    <select className={"select-role"} value={role} onChange={e => setRole(e.target.value)}>
-                        <option value={"User"} selected>Aspirant.e</option>
-                        <option value={"Model"}>Ambassadrice</option>
-                    </select>
+                    <label htmlFor="confirm" className={"input-font"}>Confirmez avec votre mot de passe</label>
+                    <div className="password-wrapper">
+                        <input
+                            id="confirm"
+                            type={showPassword ? "text" : "password"}
+                            value={confirm}
+                            onChange={e => setConfirm(e.target.value)}
+                            required
+                            className="input-input"
+                        />
+                        <button
+                            type="button"
+                            className="toggle-password"
+                            onClick={() => setShowPassword(!showPassword)}
+                            aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+                        >
+                            {showPassword ? <Eye size={20}/> : <EyeOff size={20}/>}
+                        </button>
+                    </div>
                 </div>
 
                 {error && <div role="alert" className={"div-alert-error"}>{error}</div>}

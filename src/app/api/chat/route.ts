@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { getDBInstance } from "@/lib/db";
 import crypto from "crypto";
 
 export async function GET(req: NextRequest) {
   try {
+    const db = await getDBInstance();
     const id_chat = Number(req.nextUrl.searchParams.get("id_chat"));
     console.log("[GET /api/chat] id_chat =", id_chat);
 
@@ -12,7 +13,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ success: false, message: "id_chat manquant" }, { status: 400 });
     }
 
-    const [rows] = await db.execute(`SELECT * FROM Chat WHERE id_chat = ?`, [id_chat]) as any[];
+    const [rows] = await db.execute(`SELECT * FROM Chats WHERE chat_id = ?`, [id_chat]) as any[];
     console.log("[GET /api/chat] DB rows:", rows);
 
     if (rows.length === 0) {
@@ -31,6 +32,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const db = await getDBInstance();
     const { id_chat, message, userId } = await req.json();
     console.log("[POST /api/chat] body =", { id_chat, message, userId });
 
@@ -39,7 +41,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: "Paramètres manquants" }, { status: 400 });
     }
 
-    const [rows] = await db.execute(`SELECT * FROM Chat WHERE id_chat = ?`, [id_chat]) as any[];
+    const [rows] = await db.execute(`SELECT * FROM Chats WHERE chat_id = ?`, [id_chat]) as any[];
     console.log("[POST /api/chat] DB rows:", rows);
 
     if (rows.length === 0) {
@@ -83,7 +85,7 @@ export async function POST(req: NextRequest) {
     msgs.push(newMsg);
     console.log("[POST /api/chat] msgs updated =", msgs);
 
-    await db.execute(`UPDATE Chat SET encrypted_msg = ? WHERE id_chat = ?`, [JSON.stringify(msgs), id_chat]);
+    await db.execute(`UPDATE Chats SET encrypted_msg = ? WHERE chat_id = ?`, [JSON.stringify(msgs), id_chat]);
     console.log("[POST /api/chat] DB updated avec nouveau message");
 
     return NextResponse.json({ success: true });

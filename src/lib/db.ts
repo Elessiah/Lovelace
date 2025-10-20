@@ -64,6 +64,7 @@ async function initTables(db: Pool) {
     // Projects
     await db.query(`
       CREATE TABLE IF NOT EXISTS Projects (
+        project_id                       INT      AUTO_INCREMENT        PRIMARY KEY,
         ambassador_id                 INT         NOT NULL,
         project_title                 TEXT        NOT NULL,
         project_description           TEXT        NOT NULL,

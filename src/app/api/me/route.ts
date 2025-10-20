@@ -1,7 +1,7 @@
 // src/app/api/me/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
-import { db } from "@/lib/db";
+import { getDBInstance } from "@/lib/db";
 
 export async function GET(req: NextRequest) {
   try {
@@ -17,8 +17,9 @@ export async function GET(req: NextRequest) {
     const id_user = decoded.id_user;
 
     // Récupère les infos utilisateur depuis la base
+    const db = await getDBInstance();
     const [rows]: any = await db.execute(
-      `SELECT id_user, first_name, last_name, pp_path FROM Users WHERE id_user = ?`,
+      `SELECT user_id, first_name, last_name, pp_path FROM Users WHERE user_id = ?`,
       [id_user]
     );
 
