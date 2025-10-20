@@ -1,0 +1,11 @@
+.header-container {
+    border-color: purple;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.header-site-name {
+    color: purple;
+    margin: 10px;
+}
