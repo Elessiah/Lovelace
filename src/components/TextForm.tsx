@@ -20,21 +20,26 @@ export default function TextForm({ componentName, displayName, endpoint }: Props
             const res = await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({[componentName]: text}),
+                body: JSON.stringify({ [componentName]: text }),
             });
 
             if (!res.ok) {
-               const j = await res.json().catch(() => ({}));
-               setError(j?.message || `Erreur ${res.status}`);
-               return;
+                const j = await res.json().catch(() => ({}));
+                setError(j?.message || `Erreur ${res.status}`);
+                return;
             }
 
             setSuccess(true);
             setText('');
+        } 
+        catch (e: unknown) {
+            if (e instanceof Error) {
+                setError(e.message);
+            } else {
+                setError('Erreur réseau');
+            }
         }
-        catch (e: never) {
-            setError(e?.message || 'Erreur réseau');
-        }
+
     }
 
     return (

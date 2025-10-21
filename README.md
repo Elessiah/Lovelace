@@ -49,7 +49,13 @@ cd REPO
 - npm install
 - npm run build
 - docker compose build
+- docker compose up -d nginx
+- docker run --rm -v ./certbot/conf:/etc/letsencrypt -v ./certbot/www:/var/www/certbot certbot/certbot certonly --webroot -w /var/www/certbot -d love-lace.fr -d www.love-lace.fr --email admin@love-lace.fr --agree-tos --non-interactive
+- docker compose down
+- Lancer initSSL.py
+- docker compose build nginx
 - docker compose up -d
+
 
 ## Challenge Positive Future : Projet Lovelace
 
