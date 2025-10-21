@@ -60,3 +60,7 @@ a {
   font-weight: bold;
   cursor: pointer;
 }
+
+h2 {
+    color: var(--cherry);
+}

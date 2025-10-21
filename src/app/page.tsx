@@ -56,7 +56,7 @@ export default function Home() {
           <p>Les métiers scientifiques souffrent d'un manque de visibilité féminine. Notre plateforme présente celles qui innovent, enseignent, inventent et dirigent. Elles partagent leurs expériences pour aider les jeunes à trouver leur voie.</p>
         </div>
         <div className={styles.sectionStrengths}>
-          <h2>Les atouts</h2>
+          <h2 id={styles.strenghtsTitle}>Les atouts</h2>
           <div className={styles.sectionStrengthsMainWrapper}>
             <div className={styles.sectionStrenghtWrapperRight}>
               <div className={styles.strengthProfile}><h3>Profils réels et vérifiés</h3></div>
@@ -65,57 +65,64 @@ export default function Home() {
             <div className={styles.strengthMentoring}><h3>Mentorat et échanges possibles</h3></div>
           </div>
         </div>
-        <div className="sectionRoute">
-          <h2>Explorer les parcours</h2>
-          <div className="filters">
-            <button className="filterButton">Aéronautique</button>
-            <button className="filterButton">Biologie</button>
-            <button className="filterButton">Chimie</button>
-            <button className="filterButton">Informatique</button>
-            <button className="filterButton">Mathématiques</button>
-            <button className="filterButton">Physique</button>
-            <button className="filterButton">Santé</button>
+        <div className={styles.sectionRoute}>
+          <h2 id={styles.routeTitle}>Explorer les parcours</h2>
+          <div className={styles.filters}>
+            <button className={styles.filterButton}>Aéronautique</button>
+            <button className={styles.filterButton}>Biologie</button>
+            <button className={styles.filterButton}>Chimie</button>
+            <button className={styles.filterButton}>Géologie</button>
+            <button className={styles.filterButton}>Informatique</button>
+            <button className={styles.filterButton}>Mathématiques</button>
+            <button className={styles.filterButton}>Physique</button>
+            <button className={styles.filterButton}>Santé</button>
           </div>
           <div className="sectionScientists">
-            <div className="profilesScientistsWrapper">
-              <div className="profileScientistCard">
+            <div className={styles.profilesScientistsWrapper}>
+              <div className={styles.profileScientistCard}>
                 <h3>Nom Prénom</h3>
               </div>
-              <div className="profileScientistCard">
+              <div className={styles.profileScientistCard}>
                 <h3>Nom Prénom</h3>
               </div>
-              <div className="profileScientistCard">
+              <div className={styles.profileScientistCard}>
                 <h3>Nom Prénom</h3>
               </div>
             </div>
             <div className="arrow"></div>
           </div>
-          <div className="testimonies">
+          <div className={styles.testimonies}>
             <h2>Un impact mesurable</h2>
             <p>Chaque visite compte. Chaque échange inspire.</p>
-            <div className="testimonyCard">
-              <p>"J'ai découvert une chercheuse qui m'a donné envie de poursuivre mes études en physique."</p>
-              <p className="author">Élise, 17 ans</p>
+            <div className={styles.testimonyCard}>
+              <p className={styles.textTestimony}>"J'ai découvert une chercheuse qui m'a donné envie de poursuivre mes études en physique."</p>
+              <p className={styles.author}>Élise, 17 ans</p>
             </div>
           </div>
-          <div className="sectionKeyFigures">
-            <h3 className="keyFigures">+300 profils d'ambassadrices</h3>
-            <h3 className="keyFigures">+10 000 jeunes accompagnés</h3>
-            <h3 className="keyFigures">25 domaines scientifiques représentés</h3>
+          <div className={styles.sectionKeyFigures}>
+            <div className={styles.keyFigureWrapper}>
+              <h3>+300 profils d'ambassadrices</h3>
+            </div>
+            <div className={styles.keyFigureWrapper}>
+              <h3>+10 000 jeunes accompagnés</h3>
+            </div>
+            <div className={styles.keyFigureWrapper}>
+              <h3>25 domaines scientifiques représentés</h3>
+            </div>
           </div>
-          <div className="shareRoute">
+          <div className={styles.shareRoute}>
             <h2>Partage ton parcours</h2>
-            <p>Tu veux inspirer à ton tour ? Rejoins la communauté d'ambassadrices et aide à ouvrir de nouveaux horizons.</p>
+            <p>Tu veux inspirer à ton tour ? <br/> Rejoins la communauté d'ambassadrices et aide à ouvrir de nouveaux horizons.</p>
             <button className="ctaButton">
               <Link href="/signup">Devenir ambassadrice</Link>
             </button>
           </div>
-          <div className="footer">
+        </div>
+      </div>
+      <div className={styles.footer}>
             <p>&copy; 2025 Lovelace. Tous droits réservés.</p>
             <Link href="/legal">Mentions légales</Link>
           </div>
-        </div>
-      </div>
     </div>
   )
 }
