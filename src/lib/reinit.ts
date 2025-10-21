@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs"
-import { db } from "@/lib/db"
+import { getDBInstance } from "@/lib/db"
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -20,8 +20,9 @@ export async function sendResetEmail(to: string, id_user: string) {
     const token = jwt.sign({ id_user }, process.env.JWT_SECRET!, { expiresIn: "1h" })
 
     // Sauvegarde du token en DB (adapté à ta table TEXT)
+    const db = await getDBInstance()
     await db.execute(
-      "INSERT INTO JWT_Tokens (token, creation_date, id_user, object) VALUES (?, ?, ?, ?)",
+      "INSERT INTO JWT_Tokens (token, creation_date, user_id, object) VALUES (?, ?, ?, ?)",
       [token, new Date().toISOString(), id_user.toString(), "reinit"]
     )
 
@@ -55,8 +56,9 @@ export async function resetPassword(token: string, newPassword: string) {
     const id_user = decoded.id_user.toString()
 
     // Vérifie la présence du token en DB
+    const db = await getDBInstance()
     const [rows]: any = await db.execute(
-      "SELECT * FROM JWT_Tokens WHERE token = ? AND object = 'reinit' AND id_user = ?",
+      "SELECT * FROM JWT_Tokens WHERE token = ? AND object = 'reinit' AND user_id = ?",
       [token, id_user]
     )
     if (rows.length === 0) throw new Error("Token invalide ou expiré")
@@ -74,8 +76,8 @@ export async function resetPassword(token: string, newPassword: string) {
     // Hash du nouveau mot de passe
     const hash = await bcrypt.hash(newPassword, 10)
 
-    // Met à jour le mot de passe (colonne `hash`, comme dans signup)
-    await db.execute("UPDATE Users SET hash = ? WHERE id_user = ?", [hash, id_user])
+    // Met à jour le mot de passe (colonne `hash`, comme dans register)
+    await db.execute("UPDATE Users SET hash = ? WHERE user_id = ?", [hash, id_user])
 
     // Supprime le token pour empêcher réutilisation
     await db.execute("DELETE FROM JWT_Tokens WHERE token = ?", [token])

@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer"
 import jwt from "jsonwebtoken"
-import { db } from "@/lib/db"
+import { getDBInstance } from "@/lib/db"
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -31,33 +31,34 @@ export async function confirmUser(token: string) {
     const id_user = decoded.id_user
 
     // Vérifie la validité du token
+    const db = await getDBInstance();
     const [rows]: any = await db.execute(
-      "SELECT * FROM JWT_Tokens WHERE token = ? AND object = 'signup'",
+      "SELECT * FROM JWT_Tokens WHERE token = ? AND object = 'register'",
       [token]
     )
     if (rows.length === 0) throw new Error("Token invalide ou déjà utilisé")
 
     // Récupère l'utilisateur
-    const [users]: any = await db.execute("SELECT * FROM Users WHERE id_user = ?", [id_user])
+    const [users]: any = await db.execute("SELECT * FROM Users WHERE user_id = ?", [id_user])
     if (users.length === 0) throw new Error("Utilisateur non trouvé")
     const user = users[0]
 
     // Active selon le rôle
     if (user.role === "Utilisateur") {
-      await db.execute("UPDATE Users SET status = 'active' WHERE id_user = ?", [id_user])
+      await db.execute("UPDATE Users SET status = 'active' WHERE user_id = ?", [id_user])
     } else if (user.role === "Ambassadrice") {
-      await db.execute("UPDATE Users SET status = 'manual_pending' WHERE id_user = ?", [id_user])
+      await db.execute("UPDATE Users SET status = 'manual_pending' WHERE user_id = ?", [id_user])
 
       // Vérifie si déjà présent
       const [exists]: any = await db.execute(
-        "SELECT id_ambassador FROM Ambassador_Info WHERE id_user = ?",
+        "SELECT ambassador_id FROM Ambassador_Info WHERE user_id = ?",
         [id_user]
       )
 
       if (exists.length === 0) {
         await db.execute(`
           INSERT INTO Ambassador_Info 
-          (id_user, biographie, parcours, domaine, metier, pitch, entreprise)
+          (user_id, biography, background, field_id, job, pitch, company)
           VALUES (?, '', '', '', '', '', '')
         `, [id_user])
       }
