@@ -19,7 +19,7 @@ sudo apt-get update
 sudo apt-get install -y docker.io
 sudo systemctl start docker
 sudo systemctl enable docker
-
+ 
 # Vérification
 docker --version
 docker-compose --version
@@ -29,7 +29,9 @@ git clone https://github.com/USERNAME/REPO.git
 cd REPO
 
 # 4. Lancer le projet
-- Créer fichier local .env dans le dossier du repository avec ces paramètres:
+- Lancer le fichier init.py pour initialiser les fichiers et dossiers nécessaires
+
+- Changer les paramètres du fichier local ".env" dans le dossier du repository avec ces paramètres:
     MYSQL_HOST=""               <--- nom du container mysql
     MYSQL_ROOT_PASSWORD=""      <--- mdp root mysql (le pseudo est tjr root)
     MYSQL_DATABASE=""           <--- nom database mysql
@@ -42,11 +44,12 @@ cd REPO
     SMTP_PASS=""                <--- mdp mail
     NEXT_PUBLIC_URL=""          <--- lien du domaine 
 
-    JWT_SECRET="mec33H.PC5V6?tb6+[]3:JQb"
+    JWT_SECRET=""               <--- token de vérification JWT (il me semble que je l'ai générer sur mdp generateur)
+
 - npm install
 - npm run build
+- docker compose build
 - docker compose up -d
-- Lancer DB (localhost:8000) et importer template SQL
 
 ## Challenge Positive Future : Projet Lovelace
 
