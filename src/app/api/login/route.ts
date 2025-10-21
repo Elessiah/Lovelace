@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
-import { db } from "@/lib/db"
+import { getDBInstance } from "@/lib/db"
 
 // Map pour tracker les tentatives : clé = IP, valeur = tableau de timestamps
 const loginAttempts = new Map<string, number[]>()
@@ -43,9 +43,10 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    const db = await getDBInstance();
     // récupérer utilisateur
     const [rows]: any = await db.execute(
-      "SELECT id_user, hash, role, status FROM Users WHERE email = ?",
+      "SELECT user_id, hash, role, status FROM Users WHERE email = ?",
       [email]
     )
 
@@ -89,7 +90,7 @@ export async function POST(req: NextRequest) {
 
     // stocker le token pour historique ou révocation
     await db.execute(
-      "INSERT INTO JWT_Tokens (token, creation_date, id_user, object) VALUES (?, NOW(), ?, ?)",
+      "INSERT INTO JWT_Tokens (token, creation_date, user_id, object) VALUES (?, NOW(), ?, ?)",
       [token, user.id_user, "login"]
     )
 

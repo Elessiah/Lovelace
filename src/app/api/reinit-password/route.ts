@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { db } from "@/lib/db"
+import { getDBInstance } from "@/lib/db"
 import { sendResetEmail } from "@/lib/reinit"
 
 export async function POST(req: NextRequest) {
@@ -7,6 +7,7 @@ export async function POST(req: NextRequest) {
     const { email } = await req.json()
 
     // Vérifie que l'email existe
+    const db = await getDBInstance();
     const [users]: any = await db.execute("SELECT * FROM Users WHERE email = ?", [email])
     if (!users || users.length === 0) {
       return NextResponse.json({ success: false, message: "Email non trouvé" })

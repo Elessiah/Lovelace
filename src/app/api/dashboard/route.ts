@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { getDBInstance } from "@/lib/db";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import fs from "fs";
@@ -18,13 +18,14 @@ async function saveFile(file: File, filename: string) {
 // GET /api/dashboard
 export async function GET(req: NextRequest) {
   try {
+    const db = await getDBInstance();
     const token = req.cookies.get("token")?.value;
     if (!token) return NextResponse.json({ success: false, message: "Non connecté" }, { status: 401 });
 
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
 
     const [rows]: any = await db.execute(
-      `SELECT id_user, email, first_name, last_name, role, status, pp_path FROM Users WHERE id_user = ?`,
+      `SELECT user_id, email, first_name, last_name, role, status, pp_path FROM Users WHERE user_id = ?`,
       [decoded.id_user]
     );
     if (!rows.length) return NextResponse.json({ success: false, message: "Utilisateur non trouvé" }, { status: 404 });
@@ -34,12 +35,12 @@ export async function GET(req: NextRequest) {
     let ambassadorInfo = null;
     if (user.role === "Ambassadrice") {
       const [ambaRows]: any = await db.execute(
-        `SELECT * FROM Ambassador_Info WHERE id_user = ?`,
+        `SELECT * FROM Ambassador_Info WHERE user_id = ?`,
         [user.id_user]
       );
       ambassadorInfo = ambaRows[0] || {};
       const [projects]: any = await db.execute(
-        `SELECT * FROM Projets WHERE id_ambassador = ?`,
+        `SELECT * FROM Projects WHERE ambassador_id = ?`,
         [ambaRows[0]?.id_ambassador || 0]
       );
       ambassadorInfo.projects = projects || [];
@@ -55,6 +56,7 @@ export async function GET(req: NextRequest) {
 // DELETE /api/dashboard?deleteProject=ID
 export async function DELETE(req: NextRequest) {
   try {
+    const db = await getDBInstance();
     const token = req.cookies.get("token")?.value;
     if (!token) return NextResponse.json({ success: false, message: "Non connecté" }, { status: 401 });
 
@@ -63,13 +65,13 @@ export async function DELETE(req: NextRequest) {
     if (!projectId) return NextResponse.json({ success: false, message: "ID projet manquant" }, { status: 400 });
 
     // Supprimer fichier
-    const [projRows]: any = await db.execute(`SELECT projet_photo_path FROM Projets WHERE projet_id = ?`, [projectId]);
+    const [projRows]: any = await db.execute(`SELECT project_photo_path FROM Projects WHERE project_id = ?`, [projectId]);
     if (projRows[0]?.projet_photo_path) {
       const filePath = path.join(process.cwd(), "public", projRows[0].projet_photo_path);
       if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
     }
 
-    await db.execute(`DELETE FROM Projets WHERE projet_id = ?`, [projectId]);
+    await db.execute(`DELETE FROM Projects WHERE project_id = ?`, [projectId]);
     return NextResponse.json({ success: true, message: "Projet supprimé" });
   } catch (err) {
     console.error("[DELETE] Erreur serveur :", err);
@@ -131,6 +133,7 @@ export async function POST(req: NextRequest) {
       values.push(hash);
     }
 
+    const db = await getDBInstance();
     if (updates.length) {
       values.push(decoded.id_user);
       await db.execute(`UPDATE Users SET ${updates.join(", ")} WHERE id_user = ?`, values);

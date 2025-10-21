@@ -3,7 +3,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import crypto from "crypto";
-import { db } from "@/lib/db";
+import { getDBInstance } from "@/lib/db";
 
 export const runtime = "nodejs";
 
@@ -56,8 +56,9 @@ export async function POST(req: NextRequest) {
     await fs.writeFile(filePath, buffer);
 
     // 🔹 Ajoute le message dans le chat
+    const db = await getDBInstance();
     const [rows] = await db.execute(
-      `SELECT * FROM Chat WHERE id_chat = ?`,
+      `SELECT * FROM Chats WHERE chat_id = ?`,
       [id_chat]
     ) as [Array<{ encrypted_msg: string | null }>, any];
 
@@ -74,7 +75,7 @@ export async function POST(req: NextRequest) {
     });
 
     await db.execute(
-      `UPDATE Chat SET encrypted_msg = ? WHERE id_chat = ?`,
+      `UPDATE Chats SET encrypted_msg = ? WHERE chat_id = ?`,
       [JSON.stringify(msgs), id_chat]
     );
 

@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { getDBInstance } from "@/lib/db";
 
 export async function GET(req: NextRequest) {
   try {
+    const db = await getDBInstance();
     // Sélectionne uniquement les ambassadrices actives
     const [rows]: any = await db.execute(
-      `SELECT u.id_user, u.first_name, u.last_name, u.email, u.pp_path, a.biographie, a.metier, a.domaine
+      `SELECT u.user_id, u.first_name, u.last_name, u.email, u.pp_path, a.biography, a.job, a.field_id
        FROM Users u
-       LEFT JOIN Ambassador_Info a ON u.id_user = a.id_user
+       LEFT JOIN Ambassador_Info a ON u.user_id = a.user_id
        WHERE u.role = 'Ambassadrice' AND u.status = 'active'`
     );
 

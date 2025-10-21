@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { getDBInstance } from "@/lib/db";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import fs from "fs";
@@ -55,6 +55,7 @@ export async function GET(req: NextRequest) {
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
     const id_user = decoded.id_user;
 
+    const db = await getDBInstance();
     const [chats]: any = await db.execute(
       `
       SELECT 
@@ -65,10 +66,10 @@ export async function GET(req: NextRequest) {
         ud.first_name AS dest_first_name,
         ud.last_name AS dest_last_name,
         ud.pp_path AS dest_pp
-      FROM Chat c
-      JOIN Users ua ON c.id_auteur = ua.id_user
-      JOIN Users ud ON c.id_destinataire = ud.id_user
-      WHERE c.id_auteur = ? OR c.id_destinataire = ?
+      FROM Chats c
+      JOIN Users ua ON c.author_id = ua.user_id
+      JOIN Users ud ON c.receiver_id = ud.user_id
+      WHERE c.author_id = ? OR c.receiver_id = ?
       `,
       [id_user, id_user]
     );
@@ -131,7 +132,8 @@ export async function POST(req: NextRequest) {
 // 🔐 Fonction utilitaire pour ajouter un message
 // =====================================================
 async function appendMessageToChat(id_chat: number, id_user: number, message: string) {
-  const [rows]: any = await db.execute(`SELECT * FROM Chat WHERE id_chat = ?`, [id_chat]);
+  const db = await getDBInstance();
+  const [rows]: any = await db.execute(`SELECT * FROM Chats WHERE chat_id = ?`, [id_chat]);
   if (rows.length === 0) throw new Error("Chat non trouvé");
 
   const chat = rows[0];
@@ -166,5 +168,5 @@ async function appendMessageToChat(id_chat: number, id_user: number, message: st
   const msgs = chat.encrypted_msg ? JSON.parse(chat.encrypted_msg) : [];
   msgs.push(newMsg);
 
-  await db.execute(`UPDATE Chat SET encrypted_msg = ? WHERE id_chat = ?`, [JSON.stringify(msgs), id_chat]);
+  await db.execute(`UPDATE Chats SET encrypted_msg = ? WHERE chat_id = ?`, [JSON.stringify(msgs), id_chat]);
 }
