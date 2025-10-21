@@ -55,7 +55,7 @@ Lors de l’installation, cochez **"Add Python to PATH"** pour pouvoir utiliser 
 
 - Changer les paramètres du fichier local ".env" dans le dossier du repository avec ces paramètres:
     - MYSQL_HOST=""               <--- nom du container mysql
-    - MYSQL_ROOT_PASSWORD=""      <--- mdp root mysql (le pseudo est tjr root)
+    - MYSQL_ROOT_PASSWORD=""      <--- mdp root mysql (le pseudo est toujours root)
     - MYSQL_DATABASE=""           <--- nom database mysql
     - MYSQL_USER=""               <--- user mysql
     - MYSQL_PASSWORD=""           <--- mdp user mysql
