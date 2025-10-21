@@ -51,9 +51,9 @@ Lors de l’installation, cochez **"Add Python to PATH"** pour pouvoir utiliser 
 - cd REPO
 
 ### 5. Lancer le projet
-- Lancer le fichier 1_init.py pour initialiser les fichiers et dossiers nécessaires
 
-- Changer les paramètres du fichier local ".env" dans le dossier du repository avec ces paramètres:
+- Première étape : Créer le fichier ".env" à la racine du dossier (/Lovelace/.env) puis ajouter et ajuster les paramètres ci-dessous:
+
     - MYSQL_HOST=""               <--- nom du container mysql
     - MYSQL_ROOT_PASSWORD=""      <--- mdp root mysql (le pseudo est toujours root)
     - MYSQL_DATABASE=""           <--- nom database mysql
@@ -68,4 +68,4 @@ Lors de l’installation, cochez **"Add Python to PATH"** pour pouvoir utiliser 
 
     - JWT_SECRET=""               <--- token de vérification JWT 
 
-- Une fois le fichier ".env" modifié lancer "2_start.py" pour finaliser l'installation complète du projet et le démarrer
+- Deuxième étape : Lancer le fichier init.py 
