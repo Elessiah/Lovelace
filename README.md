@@ -51,7 +51,7 @@ Lors de l’installation, cochez **"Add Python to PATH"** pour pouvoir utiliser 
 - cd REPO
 
 ### 5. Lancer le projet
-- Lancer le fichier init.py pour initialiser les fichiers et dossiers nécessaires
+- Lancer le fichier 1_init.py pour initialiser les fichiers et dossiers nécessaires
 
 - Changer les paramètres du fichier local ".env" dans le dossier du repository avec ces paramètres:
     - MYSQL_HOST=""               <--- nom du container mysql
@@ -68,14 +68,4 @@ Lors de l’installation, cochez **"Add Python to PATH"** pour pouvoir utiliser 
 
     - JWT_SECRET=""               <--- token de vérification JWT 
 
-- npm install
-- npm run build
-- docker compose build
-- docker compose up -d nginx
-- Première initialisation du certificat : "docker run --rm -v ./certbot/conf:/etc/letsencrypt -v ./certbot/www:/var/www/certbot certbot/certbot certonly --webroot -w /var/www/certbot -d love-lace.fr -d www.love-lace.fr --email admin@love-lace.fr --agree-tos --non-interactive"
-- docker compose down
-- Lancer initSSL.py
-- docker compose build nginx
-- docker compose up -d
-- Pour initialiser la construction de la DB sur docker il faut aller sur le site et remplir un formulaire qui contient l'instance de la DB par exemple s'inscrire ou se connecter
-
+- Une fois le fichier ".env" modifié lancer "2_start.py" pour finaliser l'installation complète du projet et le démarrer
