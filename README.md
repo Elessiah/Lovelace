@@ -47,19 +47,19 @@ cd REPO
 - Lancer le fichier init.py pour initialiser les fichiers et dossiers nécessaires
 
 - Changer les paramètres du fichier local ".env" dans le dossier du repository avec ces paramètres:
-    MYSQL_HOST=""               <--- nom du container mysql
-    MYSQL_ROOT_PASSWORD=""      <--- mdp root mysql (le pseudo est tjr root)
-    MYSQL_DATABASE=""           <--- nom database mysql
-    MYSQL_USER=""               <--- user mysql
-    MYSQL_PASSWORD=""           <--- mdp user mysql
+    - MYSQL_HOST=""               <--- nom du container mysql
+    - MYSQL_ROOT_PASSWORD=""      <--- mdp root mysql (le pseudo est tjr root)
+    - MYSQL_DATABASE=""           <--- nom database mysql
+    - MYSQL_USER=""               <--- user mysql
+    - MYSQL_PASSWORD=""           <--- mdp user mysql
 
-    SMTP_HOST=""                <--- serveur d'envoi mail
-    SMTP_PORT=""                <--- port du serveur d'envoi mail
-    SMTP_USER=""                <--- mail
-    SMTP_PASS=""                <--- mdp mail
-    NEXT_PUBLIC_URL=""          <--- lien du domaine 
+    - SMTP_HOST=""                <--- serveur d'envoi mail
+    - SMTP_PORT=""                <--- port du serveur d'envoi mail
+    - SMTP_USER=""                <--- mail
+    - SMTP_PASS=""                <--- mdp mail
+    - NEXT_PUBLIC_URL=""          <--- lien du domaine 
 
-    JWT_SECRET=""               <--- token de vérification JWT 
+    - JWT_SECRET=""               <--- token de vérification JWT 
 
 - npm install
 - npm run build
