@@ -31,7 +31,7 @@ async function initTables(db: Pool) {
         email                         TEXT        NOT NULL,
         hash                          TEXT        NOT NULL,
         status                        TEXT        NOT NULL,
-        pp_path                       TEXT        NOT NULL              DEFAULT '/IMG_DATA/pp_0.png'
+        pp_path                       VARCHAR(255)        NOT NULL              DEFAULT '/IMG_DATA/pp_0.png'
       )
     `);
 
@@ -89,8 +89,8 @@ async function initTables(db: Pool) {
     // Fields of work
     await db.query(`
       CREATE TABLE IF NOT EXISTS Fields (
-        field_id                       INT         AUTO_INCREMENT        PRIMARY KEY,
-        display_name                   INT         NOT NULL,
+        field_id                       INT        AUTO_INCREMENT        PRIMARY KEY,
+        display_name                   TEXT       NOT NULL
       )
     `);
 

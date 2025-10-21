@@ -44,18 +44,18 @@ cd REPO
     SMTP_PASS=""                <--- mdp mail
     NEXT_PUBLIC_URL=""          <--- lien du domaine 
 
-    JWT_SECRET=""               <--- token de vérification JWT (il me semble que je l'ai générer sur mdp generateur)
+    JWT_SECRET=""               <--- token de vérification JWT 
 
 - npm install
 - npm run build
 - docker compose build
 - docker compose up -d nginx
-- docker run --rm -v ./certbot/conf:/etc/letsencrypt -v ./certbot/www:/var/www/certbot certbot/certbot certonly --webroot -w /var/www/certbot -d love-lace.fr -d www.love-lace.fr --email admin@love-lace.fr --agree-tos --non-interactive
+- Première initialisation du certificat : "docker run --rm -v ./certbot/conf:/etc/letsencrypt -v ./certbot/www:/var/www/certbot certbot/certbot certonly --webroot -w /var/www/certbot -d love-lace.fr -d www.love-lace.fr --email admin@love-lace.fr --agree-tos --non-interactive"
 - docker compose down
 - Lancer initSSL.py
 - docker compose build nginx
 - docker compose up -d
-
+- Pour initialiser la construction de la DB sur docker il faut aller sur le site et remplir un formulaire qui contient l'instance de la DB par exemple s'inscrire ou se connecter
 
 ## Challenge Positive Future : Projet Lovelace
 
