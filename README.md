@@ -5,43 +5,50 @@ Les métiers scientifiques souffrent d’un manque de modèles féminins visible
 ## Installation du projet
 
 ### 1. Installation de Node.js
-### Windows / Mac : téléchargez et installez depuis https://nodejs.org/
+
+### Windows / Mac 
+Téléchargez et installez depuis https://nodejs.org/
+
 ### Linux (Debian/Ubuntu) :
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt-get install -y nodejs
+- curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+- sudo apt-get install -y nodejs
 
 ### Vérification
-node -v
-npm -v
+- node -v
+- npm -v
 
 ### 2. Installation de Docker
-### Windows / Mac : téléchargez et installez Docker Desktop : https://www.docker.com/products/docker-desktop
+
+### Windows / Mac 
+Téléchargez et installez Docker Desktop : https://www.docker.com/products/docker-desktop
+
 ### Linux (Debian/Ubuntu) :
-sudo apt-get update
-sudo apt-get install -y docker.io
-sudo systemctl start docker
-sudo systemctl enable docker
+- sudo apt-get update
+- sudo apt-get install -y docker.io
+- sudo systemctl start docker
+- sudo systemctl enable docker
  
 ### Vérification
-docker --version
-docker-compose --version
+- docker --version
+- docker-compose --version
 
 ### 3. Installation de Python
 
 ### Windows / Mac
 Téléchargez et installez Python depuis le site officiel : [https://www.python.org/downloads/](https://www.python.org/downloads/)  
 Lors de l’installation, cochez **"Add Python to PATH"** pour pouvoir utiliser Python depuis le terminal.
+
 ### Linux (Debian/Ubuntu)
-sudo apt-get update
-sudo apt-get install -y python3 python3-pip
+- sudo apt-get update
+- sudo apt-get install -y python3 python3-pip
 
 ### Vérification
-python3 --version
-pip3 --version
+- python3 --version
+- pip3 --version
 
 ### 4. Cloner le repository (il faut avoir accès au repo privé):
-git clone https://github.com/USERNAME/REPO.git
-cd REPO
+- git clone https://github.com/USERNAME/REPO.git
+- cd REPO
 
 ### 5. Lancer le projet
 - Lancer le fichier init.py pour initialiser les fichiers et dossiers nécessaires
