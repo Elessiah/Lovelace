@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
   },
 })
 
-// Envoie le mail de confirmation à l'utilisateur
+// Envoie le mail de confirmation à l'user
 export async function sendConfirmationEmail(to: string, user_id: number) {
   // Crée un token JWT valable 1h pour la confirmation
   const token = jwt.sign({ user_id }, process.env.JWT_SECRET!, { expiresIn: "1h" })
@@ -35,7 +35,7 @@ export async function sendConfirmationEmail(to: string, user_id: number) {
   })
 }
 
-// Confirme un utilisateur en fonction du token JWT
+// Confirme un user en fonction du token JWT
 export async function confirmUser(token: string) {
   try {
     // Vérifie et décode le token
@@ -50,7 +50,7 @@ export async function confirmUser(token: string) {
     )
     if (rows.length === 0) throw new Error("Token invalide ou déjà utilisé")
 
-    // Met à jour l'utilisateur pour le marquer comme actif
+    // Met à jour l'user pour le marquer comme actif
     await db.execute("UPDATE Users SET status = 'active' WHERE user_id = ?", [user_id])
 
     // Supprime le token de la table JWT_Tokens

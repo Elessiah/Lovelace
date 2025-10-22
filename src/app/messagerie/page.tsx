@@ -40,7 +40,7 @@ export default function MessageriePage() {
   const [loading, setLoading] = useState(true);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  // Charger l'utilisateur connecté
+  // Charger l'user connecté
   useEffect(() => {
     async function fetchUser() {
       try {

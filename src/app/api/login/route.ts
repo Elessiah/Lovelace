@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     }
 
     const db = await getDBInstance();
-    // récupérer utilisateur
+    // récupérer user
     const [rows]: any = await db.execute(
       "SELECT user_id, hash, role, status FROM Users WHERE email = ?",
       [email]

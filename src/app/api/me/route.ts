@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
     const user_id = decoded.user_id;
 
-    // Récupère les infos utilisateur depuis la base
+    // Récupère les infos user depuis la base
     const db = await getDBInstance();
     const [rows]: any = await db.execute(
       `SELECT user_id, first_name, last_name, pp_path FROM Users WHERE user_id = ?`,

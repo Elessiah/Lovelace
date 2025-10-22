@@ -46,7 +46,7 @@ export default function DashboardPage() {
         setEmail(data.data.email);
         setPpPreview(data.data.pp_path || "");
 
-        if (data.data.role === "Ambassadrice" && data.data.ambassadorInfo) {
+        if (data.data.role === "Model" && data.data.ambassadorInfo) {
           const info = data.data.ambassadorInfo;
           setBio(info.biographie || "");
           setParcours(info.parcours || "");
@@ -102,8 +102,8 @@ export default function DashboardPage() {
     if (password) formData.append("password", password);
     if (ppFile) formData.append("pp_path", ppFile);
 
-    if (user.role === "Ambassadrice") {
-      formData.append("role", "Ambassadrice");
+    if (user.role === "Model") {
+      formData.append("role", "Model");
       formData.append("bio", bio);
       formData.append("parcours", parcours);
       formData.append("domaine", domaine);
@@ -153,7 +153,7 @@ export default function DashboardPage() {
         <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Mot de passe" /><br />
         <span>Photo de profil </span><input type="file" onChange={handlePpChange} /><br />
 
-        {user.role === "Ambassadrice" && <>
+        {user.role === "Model" && <>
           <textarea placeholder="Bio" value={bio} onChange={e => setBio(e.target.value)} /><br />
           <textarea placeholder="Parcours" value={parcours} onChange={e => setParcours(e.target.value)} /><br />
           <input placeholder="Domaine" value={domaine} onChange={e => setDomaine(e.target.value)} /><br />
@@ -194,7 +194,7 @@ export default function DashboardPage() {
         {ppPreview && <img src={ppPreview} alt="PP" style={{ width: 100 }} />}
         <p>Nom complet: {user.first_name} {user.last_name}</p>
         <p>Email : {email}</p>
-        {user.role === "Ambassadrice" && <>
+        {user.role === "Model" && <>
           <p>Bio : {bio}</p>
           <p>Parcours : {parcours}</p>
           <p>Domaine : {domaine}</p>

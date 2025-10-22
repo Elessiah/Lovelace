@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
       `SELECT u.user_id, u.first_name, u.last_name, u.email, u.pp_path, a.biography, a.job, a.field_id
        FROM Users u
        LEFT JOIN Ambassador_Info a ON u.user_id = a.user_id
-       WHERE u.role = 'Ambassadrice' AND u.status = 'active'`
+       WHERE u.role = 'Model' AND u.status = 'active'`
     );
 
     return NextResponse.json({ success: true, data: rows });

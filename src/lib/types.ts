@@ -21,3 +21,23 @@ type redirectPackage = {
     token: string,
     redirect: string
 }
+
+type Project = {
+    project_id: number,
+    ambassador_id: number,
+    project_title: string,
+    project_description: string,
+    project_photo_path: string,
+}
+
+type AmbassadorInfo = {
+    ambassador_id: number,
+    user_id: number,
+    biography: string,
+    background: string,
+    field_id: number,
+    job: string,
+    company: string,
+    pitch: string,
+    projects: Project[],
+}

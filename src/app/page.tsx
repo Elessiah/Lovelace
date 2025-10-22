@@ -22,7 +22,7 @@ export default function Home() {
 
   return (
     <div>
-      <Link href="/signup">Inscription</Link>
+      <Link href="/register">Inscription</Link>
       <br /><br />
       <Link href="/login">Connexion</Link>
       <br /><br />

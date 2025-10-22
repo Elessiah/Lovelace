@@ -24,7 +24,7 @@ export async function sendConfirmationEmail(to: string, token: string) {
   })
 }
 
-// Confirme un utilisateur via son token
+// Confirme un user via son token
 export async function confirmUser(token: string) {
   try {
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET!)
@@ -38,15 +38,15 @@ export async function confirmUser(token: string) {
     )
     if (rows.length === 0) throw new Error("Token invalide ou déjà utilisé")
 
-    // Récupère l'utilisateur
+    // Récupère l'user
     const [users]: any = await db.execute("SELECT * FROM Users WHERE user_id = ?", [user_id])
     if (users.length === 0) throw new Error("Utilisateur non trouvé")
     const user = users[0]
 
     // Active selon le rôle
-    if (user.role === "Utilisateur") {
+    if (user.role === "User") {
       await db.execute("UPDATE Users SET status = 'active' WHERE user_id = ?", [user_id])
-    } else if (user.role === "Ambassadrice") {
+    } else if (user.role === "Model") {
       await db.execute("UPDATE Users SET status = 'manual_pending' WHERE user_id = ?", [user_id])
 
       // Vérifie si déjà présent

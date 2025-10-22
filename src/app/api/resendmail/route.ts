@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: "Email requis" }, { status: 400 })
     }
 
-    // Vérifie que l'utilisateur existe et est en "pending"
+    // Vérifie que user existe et est en "pending"
     const db = await getDBInstance();
     const [rows]: any = await db.execute(
       "SELECT user_id, status FROM Users WHERE email = ?",

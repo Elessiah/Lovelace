@@ -32,18 +32,22 @@ export async function GET(req: NextRequest) {
     const user: UserDashboard = rows[0];
     if (user.status !== "active") return NextResponse.json({ success: false, message: "Compte non actif", status: 403 });
 
-    let ambassadorInfo = null;
+    let ambassadorInfo: AmbassadorInfo | null = null;
     if (user.role === "Model") {
       const [ambaRows]: any = await db.execute(
         `SELECT * FROM Ambassador_Info WHERE user_id = ?`,
         [user.user_id]
       );
-      ambassadorInfo = ambaRows[0] || {};
-      const [projects]: any = await db.execute(
-        `SELECT * FROM Projects WHERE ambassador_id = ?`,
-        [ambaRows[0]?.ambassador_id || 0]
-      );
-      ambassadorInfo.projects = projects || [];
+      ambassadorInfo = ambaRows[0] || null;
+      if (ambassadorInfo) {
+        const [projects]: any = await db.execute(
+            `SELECT *
+             FROM Projects
+             WHERE ambassador_id = ?`,
+            [ambaRows[0]?.ambassador_id || 0]
+        );
+        ambassadorInfo.projects = projects || [];
+      }
     }
 
     return NextResponse.json({ success: true, data: { ...user, ambassadorInfo } });
@@ -182,5 +186,3 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: false, message: "Erreur serveur" }, { status: 500 });
   }
 }
-
-export {};
