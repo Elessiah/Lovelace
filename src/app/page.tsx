@@ -24,46 +24,12 @@ export default function Home() {
   return (
     <div className="pageWrapper">
       <div className="mainWrapper">
-        <div className="navBar">
-          <Link href="/" className="brand">Lovelace</Link>
-          <nav className="menu">
-            <Link href="/signup">Inscription</Link>
-            <br /><br />
-            <Link href="/login">Connexion</Link>
-            <br /><br />
-            {userId ? (
-              <Link href={`/dashboard/${userId}`}>Mon Dashboard</Link>
-            ) : (
-              <span>Connectez-vous pour accéder à votre dashboard</span>
-            )}
-            <br /><br />
-            <Link href="/list">Page Ambassadrices</Link>
-            <br /><br />
-            <Link href="/messagerie">Ma Messagerie</Link>
-            <br /><br />
-            <Link href="/logout">Page de déconnexion</Link>
-          </nav>
-        </div>
         <div className={styles.sectionHero}>
           <h1>La plateforme qui rend visibles les femmes de science</h1>
           <p>Les modèles féminins existent. Nous les mettons en lumière pour inspirer les générations futures et montrer la diversité des parcours scientifiques d'aujourd'hui.</p>
           <button className="ctaButton">
             <Link href="/list">Découvrir les ambassadrices</Link>
           </button>
-        </div>
-        <div className={styles.sectionInfo}>
-          <h2>Redonner leur place aux femmes dans les sciences</h2>
-          <p>Les métiers scientifiques souffrent d'un manque de visibilité féminine. Notre plateforme présente celles qui innovent, enseignent, inventent et dirigent. Elles partagent leurs expériences pour aider les jeunes à trouver leur voie.</p>
-        </div>
-        <div className={styles.sectionStrengths}>
-          <h2 id={styles.strenghtsTitle}>Les atouts</h2>
-          <div className={styles.sectionStrengthsMainWrapper}>
-            <div className={styles.sectionStrenghtWrapperRight}>
-              <div className={styles.strengthProfile}><h3>Profils réels et vérifiés</h3></div>
-              <div className={styles.strengthTestimonies}><h3>Témoignages concrets</h3></div>
-            </div>
-            <div className={styles.strengthMentoring}><h3>Mentorat et échanges possibles</h3></div>
-          </div>
         </div>
         <div className={styles.sectionRoute}>
           <h2 id={styles.routeTitle}>Explorer les parcours</h2>
@@ -91,6 +57,10 @@ export default function Home() {
             </div>
             <div className="arrow"></div>
           </div>
+          <div className={styles.sectionInfo}>
+            <h2>Redonner leur place aux femmes dans les sciences</h2>
+            <p>Les métiers scientifiques souffrent d'un manque de visibilité féminine. Notre plateforme présente celles qui innovent, enseignent, inventent et dirigent. Elles partagent leurs expériences pour aider les jeunes à trouver leur voie.</p>
+          </div>
           <div className={styles.testimonies}>
             <h2>Un impact mesurable</h2>
             <p>Chaque visite compte. Chaque échange inspire.</p>
@@ -112,7 +82,7 @@ export default function Home() {
           </div>
           <div className={styles.shareRoute}>
             <h2>Partage ton parcours</h2>
-            <p>Tu veux inspirer à ton tour ? <br/> Rejoins la communauté d'ambassadrices et aide à ouvrir de nouveaux horizons.</p>
+            <p>Tu veux inspirer à ton tour ? <br /> Rejoins la communauté d'ambassadrices et aide à ouvrir de nouveaux horizons.</p>
             <button className="ctaButton">
               <Link href="/signup">Devenir ambassadrice</Link>
             </button>
@@ -120,9 +90,9 @@ export default function Home() {
         </div>
       </div>
       <div className={styles.footer}>
-            <p>&copy; 2025 Lovelace. Tous droits réservés.</p>
-            <Link href="/legal">Mentions légales</Link>
-          </div>
+        <p>&copy; 2025 Lovelace. Tous droits réservés.</p>
+        <Link href="/legal">Mentions légales</Link>
+      </div>
     </div>
   )
 }
