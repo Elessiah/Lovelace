@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     }
 
     const user = users[0]
-    await sendResetEmail(email, user.id_user)
+    await sendResetEmail(email, user.user_id)
 
     return NextResponse.json({
       success: true,

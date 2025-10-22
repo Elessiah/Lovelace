@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: "Token invalide" }, { status: 401 });
     }
 
-    const author_id = decoded.id_user;
+    const author_id = decoded.user_id;
     const receiver_id = Number(body.receiver_id);
 
     if (!receiver_id || isNaN(receiver_id)) {

@@ -4,7 +4,7 @@ import { getDBInstance } from "@/lib/db";
 export async function GET(req: NextRequest) {
   try {
     const db = await getDBInstance();
-    const id_user = req.nextUrl.searchParams.get("id_user");
+    const user_id = req.nextUrl.searchParams.get("user_id");
 
     let query = `
       SELECT u.user_id, u.first_name, u.last_name, u.email, u.pp_path, a.biography, a.job, a.field_id
@@ -14,9 +14,9 @@ export async function GET(req: NextRequest) {
     `;
 
     const values: any[] = [];
-    if (id_user) {
-      query += " AND u.id_user = ?";
-      values.push(id_user);
+    if (user_id) {
+      query += " AND u.user_id = ?";
+      values.push(user_id);
     }
 
     const [rows]: any = await db.execute(query, values);

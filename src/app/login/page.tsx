@@ -9,7 +9,7 @@ export default function Register() {
       <div className={"div-container"}>
         <Header />
         <div className={"login-container"}>
-          <LoginMenu targetOnSuccess={"/"} endpoint={"/api/login"} />
+          <LoginMenu endpoint={"/api/login"} />
         </div>
       </div>
   )

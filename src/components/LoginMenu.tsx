@@ -6,28 +6,27 @@ import {redirect} from "next/navigation";
 import {Eye, EyeOff} from "lucide-react";
 
 type Props = {
-    targetOnSuccess: string;
     endpoint: string; // url d'API, défaut '/api/auth/register'
 };
 
-export default function LoginMenu({ targetOnSuccess = "/", endpoint = '/api/login' }: Props) {
+export default function LoginMenu({ endpoint = '/api/login' }: Props) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(false);
+    const [targetOnSuccess, setTargetOnSuccess] = useState("");
     const [showPassword, setShowPassword] = useState(false);
 
     const emailValid = (e: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 
-    if (success)
+    if (targetOnSuccess.length > 0) {
         redirect(targetOnSuccess);
+    }
 
     async function handleSubmit(ev: React.FormEvent) {
         ev.preventDefault();
         setError(null);
-        setSuccess(false);
 
         if (!emailValid(email)) { setError('E-mail invalide'); return; }
 
@@ -38,15 +37,15 @@ export default function LoginMenu({ targetOnSuccess = "/", endpoint = '/api/logi
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: email, password: password }),
             });
+            const data: redirectPackage = await res.json().catch(() => ({}));
 
             if (!res.ok) {
-                const j = await res.json().catch(() => ({}));
-                setError(j?.message || `Erreur ${res.status}`);
+                setError(data?.message || `Erreur ${res.status}`);
                 setLoading(false);
                 return;
             }
 
-            setSuccess(true);
+            setTargetOnSuccess(data.redirect);
             setEmail('');
             setPassword('');
         } catch (e: any) {
@@ -97,7 +96,6 @@ export default function LoginMenu({ targetOnSuccess = "/", endpoint = '/api/logi
                 </div>
 
                 {error && <div role="alert" className={"div-alert-error"}>{error}</div>}
-                {success && <div role="status" className={"div-alert-status"}>Connecté !</div>}
 
                 <div className={"div-submit"}>
                     <button

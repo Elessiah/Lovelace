@@ -42,7 +42,7 @@ export default function ListPage() {
         >
           {ambassadors.map((a) => (
             <div
-              key={a.id_user}
+              key={a.user_id}
               style={{
                 cursor: "pointer",
                 backgroundColor: "#fff",
@@ -69,7 +69,7 @@ export default function ListPage() {
                 {a.first_name} {a.last_name}
               </h2>
               <button
-                onClick={() => router.push(`/list/${a.id_user}`)}
+                onClick={() => router.push(`/list/${a.user_id}`)}
                 style={{
                   padding: "8px 12px",
                   margin: "8px 0",

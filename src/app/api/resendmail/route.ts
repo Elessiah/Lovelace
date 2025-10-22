@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Envoie le mail de confirmation
-    await sendConfirmationEmail(email, user.id_user)
+    await sendConfirmationEmail(email, user.user_id)
 
     return NextResponse.json({ success: true, message: "Mail de confirmation renvoyé !" })
   } catch (err) {

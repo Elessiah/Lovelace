@@ -14,16 +14,16 @@ const transporter = nodemailer.createTransport({
 })
 
 // --- Envoie le mail de réinitialisation ---
-export async function sendResetEmail(to: string, id_user: string) {
+export async function sendResetEmail(to: string, user_id: string) {
   try {
     // Génère un token JWT d'une heure
-    const token = jwt.sign({ id_user }, process.env.JWT_SECRET!, { expiresIn: "1h" })
+    const token = jwt.sign({ user_id }, process.env.JWT_SECRET!, { expiresIn: "1h" })
 
     // Sauvegarde du token en DB (adapté à ta table TEXT)
     const db = await getDBInstance()
     await db.execute(
       "INSERT INTO JWT_Tokens (token, creation_date, user_id, object) VALUES (?, ?, ?, ?)",
-      [token, new Date().toISOString(), id_user.toString(), "reinit"]
+      [token, new Date().toISOString(), user_id.toString(), "reinit"]
     )
 
     // Lien de réinitialisation
@@ -53,13 +53,13 @@ export async function resetPassword(token: string, newPassword: string) {
   try {
     // Vérifie et décode le token JWT
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET!)
-    const id_user = decoded.id_user.toString()
+    const user_id = decoded.user_id.toString()
 
     // Vérifie la présence du token en DB
     const db = await getDBInstance()
     const [rows]: any = await db.execute(
       "SELECT * FROM JWT_Tokens WHERE token = ? AND object = 'reinit' AND user_id = ?",
-      [token, id_user]
+      [token, user_id]
     )
     if (rows.length === 0) throw new Error("Token invalide ou expiré")
 
@@ -77,7 +77,7 @@ export async function resetPassword(token: string, newPassword: string) {
     const hash = await bcrypt.hash(newPassword, 10)
 
     // Met à jour le mot de passe (colonne `hash`, comme dans register)
-    await db.execute("UPDATE Users SET hash = ? WHERE user_id = ?", [hash, id_user])
+    await db.execute("UPDATE Users SET hash = ? WHERE user_id = ?", [hash, user_id])
 
     // Supprime le token pour empêcher réutilisation
     await db.execute("DELETE FROM JWT_Tokens WHERE token = ?", [token])

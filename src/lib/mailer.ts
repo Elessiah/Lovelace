@@ -28,7 +28,7 @@ export async function sendConfirmationEmail(to: string, token: string) {
 export async function confirmUser(token: string) {
   try {
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET!)
-    const id_user = decoded.id_user
+    const user_id = decoded.user_id
 
     // Vérifie la validité du token
     const db = await getDBInstance();
@@ -39,20 +39,20 @@ export async function confirmUser(token: string) {
     if (rows.length === 0) throw new Error("Token invalide ou déjà utilisé")
 
     // Récupère l'utilisateur
-    const [users]: any = await db.execute("SELECT * FROM Users WHERE user_id = ?", [id_user])
+    const [users]: any = await db.execute("SELECT * FROM Users WHERE user_id = ?", [user_id])
     if (users.length === 0) throw new Error("Utilisateur non trouvé")
     const user = users[0]
 
     // Active selon le rôle
     if (user.role === "Utilisateur") {
-      await db.execute("UPDATE Users SET status = 'active' WHERE user_id = ?", [id_user])
+      await db.execute("UPDATE Users SET status = 'active' WHERE user_id = ?", [user_id])
     } else if (user.role === "Ambassadrice") {
-      await db.execute("UPDATE Users SET status = 'manual_pending' WHERE user_id = ?", [id_user])
+      await db.execute("UPDATE Users SET status = 'manual_pending' WHERE user_id = ?", [user_id])
 
       // Vérifie si déjà présent
       const [exists]: any = await db.execute(
         "SELECT ambassador_id FROM Ambassador_Info WHERE user_id = ?",
-        [id_user]
+        [user_id]
       )
 
       if (exists.length === 0) {
@@ -60,7 +60,7 @@ export async function confirmUser(token: string) {
           INSERT INTO Ambassador_Info 
           (user_id, biography, background, field_id, job, pitch, company)
           VALUES (?, '', '', '', '', '', '')
-        `, [id_user])
+        `, [user_id])
       }
 
       // Mail admin

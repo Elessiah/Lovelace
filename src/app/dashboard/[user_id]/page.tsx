@@ -40,7 +40,7 @@ export default function DashboardPage() {
         const res = await fetch("/api/dashboard");
         const data = await res.json();
         if (!data.success) { setMessage(data.message); setLoading(false); return; }
-        if (data.data.id_user.toString() !== userId) { setMessage("Accès refusé"); setLoading(false); return; }
+        if (data.data.user_id.toString() !== userId) { setMessage("Accès refusé"); setLoading(false); return; }
 
         setUser(data.data);
         setEmail(data.data.email);

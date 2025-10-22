@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const user = rows[0]
+    const user: UserLogin = rows[0];
 
     // vérifier le mot de passe
     const match = await bcrypt.compare(password, user.hash)
@@ -85,17 +85,17 @@ export async function POST(req: NextRequest) {
     }
 
     // créer JWT (1h)
-    const payload = { id_user: user.id_user, role: user.role }
+    const payload = { user_id: user.user_id, role: user.role }
     const token = jwt.sign(payload, process.env.JWT_SECRET!, { expiresIn: "1h" })
 
     // stocker le token pour historique ou révocation
     await db.execute(
       "INSERT INTO JWT_Tokens (token, creation_date, user_id, object) VALUES (?, NOW(), ?, ?)",
-      [token, user.id_user, "login"]
+      [token, user.user_id, "login"]
     )
 
     // redirection après login
-    const redirect = "/"
+    const redirect = `/dashboard/${user.user_id}`
 
     // créer réponse JSON
     const response = NextResponse.json({

@@ -18,7 +18,7 @@ async function ensureUploadDir() {
 
 // 🟢 Typage du payload JWT
 interface JwtUserPayload extends JwtPayload {
-  id_user: number;
+  user_id: number;
 }
 
 /**
@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: "Non connecté" }, { status: 401 });
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtUserPayload;
-    const id_user = decoded.id_user;
+    const user_id = decoded.user_id;
 
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
     const chat = rows[0];
     const msgs = chat.encrypted_msg ? JSON.parse(chat.encrypted_msg) : [];
     msgs.push({
-      auteur: id_user,
+      auteur: user_id,
       msg: `FICHIER:${fileName}`,
       iv: null,
       timestamp: Date.now(),

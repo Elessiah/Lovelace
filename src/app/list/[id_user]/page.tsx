@@ -17,13 +17,13 @@ export default function ListIdPage() {
   const [loading, setLoading] = useState(true);
   const params = useParams();
   const router = useRouter();
-  const id_user = Number(params.id_user);
+  const user_id = Number(params.user_id);
 
   useEffect(() => {
-    console.log("[ListIdPage] useEffect triggered, id_user =", id_user);
+    console.log("[ListIdPage] useEffect triggered, user_id =", user_id);
 
-    if (!id_user || isNaN(id_user)) {
-      console.warn("[ListIdPage] id_user invalide");
+    if (!user_id || isNaN(user_id)) {
+      console.warn("[ListIdPage] user_id invalide");
       setLoading(false);
       setAmbassador(null);
       return;
@@ -32,7 +32,7 @@ export default function ListIdPage() {
     const fetchData = async () => {
       try {
         console.log("[ListIdPage] Fetching /api/list/perId");
-        const res = await fetch(`/api/list/perId?id_user=${id_user}`);
+        const res = await fetch(`/api/list/perId?user_id=${user_id}`);
         const data = await res.json();
         console.log("[ListIdPage] fetch response:", data);
 
@@ -40,7 +40,7 @@ export default function ListIdPage() {
           setAmbassador(data.data[0]);
           console.log("[ListIdPage] Ambassador data set:", data.data[0]);
         } else {
-          console.warn("[ListIdPage] Aucun ambassadeur trouvé pour cet id_user");
+          console.warn("[ListIdPage] Aucun ambassadeur trouvé pour cet user_id");
           setAmbassador(null);
         }
       } catch (err) {
@@ -52,20 +52,20 @@ export default function ListIdPage() {
     };
 
     fetchData();
-  }, [id_user]);
+  }, [user_id]);
 
   const startChat = async () => {
-    if (!id_user) {
-      console.warn("[ListIdPage] startChat appelé avec id_user invalide");
+    if (!user_id) {
+      console.warn("[ListIdPage] startChat appelé avec user_id invalide");
       return;
     }
 
     try {
-      console.log("[ListIdPage] startChat avec id_user =", id_user);
+      console.log("[ListIdPage] startChat avec user_id =", user_id);
       const res = await fetch("/api/chat/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id_destinataire: id_user }),
+        body: JSON.stringify({ id_destinataire: user_id }),
       });
       const data = await res.json();
       console.log("[ListIdPage] startChat response:", data);

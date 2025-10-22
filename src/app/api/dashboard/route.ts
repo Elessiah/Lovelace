@@ -26,22 +26,22 @@ export async function GET(req: NextRequest) {
 
     const [rows]: any = await db.execute(
       `SELECT user_id, email, first_name, last_name, role, status, pp_path FROM Users WHERE user_id = ?`,
-      [decoded.id_user]
+      [decoded.user_id]
     );
     if (!rows.length) return NextResponse.json({ success: false, message: "Utilisateur non trouvé" }, { status: 404 });
-    const user = rows[0];
+    const user: UserDashboard = rows[0];
     if (user.status !== "active") return NextResponse.json({ success: false, message: "Compte non actif", status: 403 });
 
     let ambassadorInfo = null;
-    if (user.role === "Ambassadrice") {
+    if (user.role === "Model") {
       const [ambaRows]: any = await db.execute(
         `SELECT * FROM Ambassador_Info WHERE user_id = ?`,
-        [user.id_user]
+        [user.user_id]
       );
       ambassadorInfo = ambaRows[0] || {};
       const [projects]: any = await db.execute(
         `SELECT * FROM Projects WHERE ambassador_id = ?`,
-        [ambaRows[0]?.id_ambassador || 0]
+        [ambaRows[0]?.ambassador_id || 0]
       );
       ambassadorInfo.projects = projects || [];
     }
@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
     const ppFile = formData.get("pp_path") as File | null;
     if (ppFile) {
       const ext = ppFile.name.split(".").pop();
-      const fileName = `pp_${decoded.id_user}.${ext}`;
+      const fileName = `pp_${decoded.user_id}.${ext}`;
       pp_path = await saveFile(ppFile, fileName);
     }
 
@@ -135,15 +135,15 @@ export async function POST(req: NextRequest) {
 
     const db = await getDBInstance();
     if (updates.length) {
-      values.push(decoded.id_user);
-      await db.execute(`UPDATE Users SET ${updates.join(", ")} WHERE id_user = ?`, values);
+      values.push(decoded.user_id);
+      await db.execute(`UPDATE Users SET ${updates.join(", ")} WHERE user_id = ?`, values);
     }
 
     // Update Ambassadrice
-    if (role === "Ambassadrice") {
-      const [ambaRows]: any = await db.execute(`SELECT id_ambassador FROM Ambassador_Info WHERE id_user = ?`, [decoded.id_user]);
-      const id_ambassador = ambaRows[0]?.id_ambassador;
-      if (!id_ambassador) return NextResponse.json({ success: false, message: "Ambassadrice non trouvée" }, { status: 404 });
+    if (role === "Model") {
+      const [ambaRows]: any = await db.execute(`SELECT ambassador_id FROM Ambassador_Info WHERE user_id = ?`, [decoded.user_id]);
+      const ambassador_id = ambaRows[0]?.ambassador_id;
+      if (!ambassador_id) return NextResponse.json({ success: false, message: "Ambassadrice non trouvée" }, { status: 404 });
 
       const ambaUpdates: string[] = [];
       const ambaValues: any[] = [];
@@ -155,24 +155,25 @@ export async function POST(req: NextRequest) {
       if (entreprise) { ambaUpdates.push("entreprise = ?"); ambaValues.push(entreprise); }
 
       if (ambaUpdates.length) {
-        ambaValues.push(id_ambassador);
-        await db.execute(`UPDATE Ambassador_Info SET ${ambaUpdates.join(", ")} WHERE id_ambassador = ?`, ambaValues);
+        ambaValues.push(ambassador_id);
+        await db.execute(`UPDATE Ambassador_Info SET ${ambaUpdates.join(", ")} WHERE ambassador_id = ?`, ambaValues);
       }
 
       // Projets
       const projectsFiles = formData.getAll("projets") as File[];
-      projectsFiles.forEach(async (file, i) => {
+      for (const file of projectsFiles) {
+        const i = projectsFiles.indexOf(file);
         const titre = formData.get(`projet_titre_${i}`)?.toString() || "";
         const description = formData.get(`projet_description_${i}`)?.toString() || "";
         const ext = file.name.split(".").pop();
-        const fileName = `projet_${Date.now()}_${id_ambassador}.${ext}`;
+        const fileName = `projet_${Date.now()}_${ambassador_id}.${ext}`;
         const photo_path = await saveFile(file, fileName);
 
         db.execute(
-          `INSERT INTO Projets (id_ambassador, projet_titre, projet, projet_photo_path) VALUES (?, ?, ?, ?)`,
-          [id_ambassador, titre, description, photo_path]
+          `INSERT INTO Projects (ambassador_id, project_title, project_description, project_photo_path) VALUES (?, ?, ?, ?)`,
+          [ambassador_id, titre, description, photo_path]
         );
-      });
+      }
     }
 
     return NextResponse.json({ success: true, message: "Infos mises à jour" });

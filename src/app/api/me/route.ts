@@ -14,13 +14,13 @@ export async function GET(req: NextRequest) {
     }
 
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
-    const id_user = decoded.id_user;
+    const user_id = decoded.user_id;
 
     // Récupère les infos utilisateur depuis la base
     const db = await getDBInstance();
     const [rows]: any = await db.execute(
       `SELECT user_id, first_name, last_name, pp_path FROM Users WHERE user_id = ?`,
-      [id_user]
+      [user_id]
     );
 
     if (!rows.length) {
@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      id_user: user.id_user,
+      user_id: user.user_id,
       first_name: user.first_name,
       last_name: user.last_name,
       pp_path: user.pp_path,

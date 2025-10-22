@@ -14,15 +14,15 @@ const transporter = nodemailer.createTransport({
 })
 
 // Envoie le mail de confirmation à l'utilisateur
-export async function sendConfirmationEmail(to: string, id_user: number) {
+export async function sendConfirmationEmail(to: string, user_id: number) {
   // Crée un token JWT valable 1h pour la confirmation
-  const token = jwt.sign({ id_user }, process.env.JWT_SECRET!, { expiresIn: "1h" })
+  const token = jwt.sign({ user_id }, process.env.JWT_SECRET!, { expiresIn: "1h" })
 
   // Stocke le token dans la table JWT_Tokens pour vérification ultérieure
   const db = await getDBInstance();
   await db.execute(
     "INSERT INTO JWT_Tokens (token, creation_date, user_id, object) VALUES (?, NOW(), ?, 'confirm')",
-    [token, id_user]
+    [token, user_id]
   )
 
   const url = `${process.env.NEXT_PUBLIC_URL}/confirm?token=${token}`
@@ -40,7 +40,7 @@ export async function confirmUser(token: string) {
   try {
     // Vérifie et décode le token
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET!)
-    const id_user = decoded.id_user
+    const user_id = decoded.user_id
 
     // Vérifie que le token existe encore dans la table JWT_Tokens
     const db = await getDBInstance();
@@ -51,7 +51,7 @@ export async function confirmUser(token: string) {
     if (rows.length === 0) throw new Error("Token invalide ou déjà utilisé")
 
     // Met à jour l'utilisateur pour le marquer comme actif
-    await db.execute("UPDATE Users SET status = 'active' WHERE user_id = ?", [id_user])
+    await db.execute("UPDATE Users SET status = 'active' WHERE user_id = ?", [user_id])
 
     // Supprime le token de la table JWT_Tokens
     await db.execute("DELETE FROM JWT_Tokens WHERE token = ?", [token])

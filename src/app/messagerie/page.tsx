@@ -25,7 +25,7 @@ interface Message {
 }
 
 interface User {
-  id_user: number;
+  user_id: number;
   first_name: string;
   last_name: string;
   pp_path: string | null;
@@ -165,11 +165,11 @@ export default function MessageriePage() {
         <h2 style={{ marginBottom: 16 }}>Chats</h2>
         {chats.map((c) => {
           const otherName =
-            user.id_user === c.id_auteur
+            user.user_id === c.id_auteur
               ? `${c.dest_first_name} ${c.dest_last_name}`
               : `${c.auteur_first_name} ${c.auteur_last_name}`;
           const otherPP =
-            user.id_user === c.id_auteur
+            user.user_id === c.id_auteur
               ? c.dest_pp || "/default_pp.png"
               : c.auteur_pp || "/default_pp.png";
 
@@ -227,7 +227,7 @@ export default function MessageriePage() {
               }}
             >
               {msgs.map((m, i) => {
-                const isMine = m.auteur === user.id_user;
+                const isMine = m.auteur === user.user_id;
                 const userPP = isMine
                   ? selectedChat.auteur_pp || "/default_pp.png"
                   : selectedChat.dest_pp || "/default_pp.png";

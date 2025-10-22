@@ -46,24 +46,24 @@ export async function POST(req: NextRequest) {
     // Insertion
     const sql = "INSERT INTO Users (role, last_name, first_name, email, hash, status, pp_path) VALUES (?, ?, ?, ?, ?, ?, ?)"
     const [result]: any = await db.execute(sql, [data.role, data.lastname, data.firstname, data.email, hash, status, ""])
-    const id_user = result.insertId
+    const user_id = result.insertId
 
     // Photo de profil
     /*
     if (pp && pp.size) {
       const buffer = Buffer.from(await pp.arrayBuffer())
       const ext = path.extname(pp.name) || ".png"
-      const fileName = `pp_${id_user}${ext}`
+      const fileName = `pp_${user_id}${ext}`
       const uploadDir = path.join(process.cwd(), "public", "IMG_DATA")
       if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true })
       fs.writeFileSync(path.join(uploadDir, fileName), buffer)
-      await db.execute("UPDATE Users SET pp_path = ? WHERE id_user = ?", [`/IMG_DATA/${fileName}`, id_user])
+      await db.execute("UPDATE Users SET pp_path = ? WHERE user_id = ?", [`/IMG_DATA/${fileName}`, user_id])
     }
      */
 
     // Token JWT
-    const signupToken = jwt.sign({ id_user }, process.env.JWT_SECRET!, { expiresIn: "1h" })
-    await db.execute("INSERT INTO JWT_Tokens (token, creation_date, user_id, object) VALUES (?, NOW(), ?, ?)", [signupToken, id_user, "register"])
+    const signupToken = jwt.sign({ user_id }, process.env.JWT_SECRET!, { expiresIn: "1h" })
+    await db.execute("INSERT INTO JWT_Tokens (token, creation_date, user_id, object) VALUES (?, NOW(), ?, ?)", [signupToken, user_id, "register"])
 
     // Mail de confirmation
     await sendConfirmationEmail(data.email, signupToken)

@@ -53,7 +53,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ success: false, message: "Non connecté" }, { status: 401 });
 
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
-    const id_user = decoded.id_user;
+    const user_id = decoded.user_id;
 
     const db = await getDBInstance();
     const [chats]: any = await db.execute(
@@ -71,7 +71,7 @@ export async function GET(req: NextRequest) {
       JOIN Users ud ON c.receiver_id = ud.user_id
       WHERE c.author_id = ? OR c.receiver_id = ?
       `,
-      [id_user, id_user]
+      [user_id, user_id]
     );
 
     return NextResponse.json({ success: true, data: chats });
@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: "Non connecté" }, { status: 401 });
 
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
-    const id_user = decoded.id_user;
+    const user_id = decoded.user_id;
     const contentType = req.headers.get("content-type") || "";
 
     // 🧩 1. Envoi de fichier (multipart/form-data)
@@ -110,7 +110,7 @@ export async function POST(req: NextRequest) {
       fs.writeFileSync(filePath, buffer);
 
       // Ajoute le message "FICHIER:nom"
-      await appendMessageToChat(Number(id_chat), id_user, `FICHIER:${fileName}`);
+      await appendMessageToChat(Number(id_chat), user_id, `FICHIER:${fileName}`);
 
       return NextResponse.json({ success: true, file: fileName });
     }
@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
     if (!id_chat || !message)
       return NextResponse.json({ success: false, message: "Paramètres manquants" }, { status: 400 });
 
-    await appendMessageToChat(Number(id_chat), id_user, message);
+    await appendMessageToChat(Number(id_chat), user_id, message);
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("[POST] /api/messagerie error:", err);
@@ -131,7 +131,7 @@ export async function POST(req: NextRequest) {
 // =====================================================
 // 🔐 Fonction utilitaire pour ajouter un message
 // =====================================================
-async function appendMessageToChat(id_chat: number, id_user: number, message: string) {
+async function appendMessageToChat(id_chat: number, user_id: number, message: string) {
   const db = await getDBInstance();
   const [rows]: any = await db.execute(`SELECT * FROM Chats WHERE chat_id = ?`, [id_chat]);
   if (rows.length === 0) throw new Error("Chat non trouvé");
@@ -144,7 +144,7 @@ async function appendMessageToChat(id_chat: number, id_user: number, message: st
   // Si c’est un fichier, on ne chiffre pas
   if (message.startsWith("FICHIER:")) {
     newMsg = {
-      auteur: id_user,
+      auteur: user_id,
       msg: message,
       iv: null,
       timestamp: Date.now(),
@@ -158,7 +158,7 @@ async function appendMessageToChat(id_chat: number, id_user: number, message: st
     encrypted += cipher.final("hex");
 
     newMsg = {
-      auteur: id_user,
+      auteur: user_id,
       msg: encrypted,
       iv: iv.toString("hex"),
       timestamp: Date.now(),

@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
     if (!token) return NextResponse.json({ success: false, message: "Non connecté" }, { status: 401 });
 
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
-    const id_user = decoded.id_user;
+    const user_id = decoded.user_id;
 
     // Récupère id_chat depuis l'URL
     const id_chat_str = req.nextUrl.pathname.split("/").pop();
@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
 
     const [rows]: any = await db.execute(
       `SELECT * FROM Chats WHERE chat_id = ? AND (author_id = ? OR receiver_id = ?)`,
-      [id_chat, id_user, id_user]
+      [id_chat, user_id, user_id]
     );
     if (rows.length === 0) return NextResponse.json({ success: false, message: "Chat non trouvé" }, { status: 404 });
 
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     if (!token) return NextResponse.json({ success: false, message: "Non connecté" }, { status: 401 });
 
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
-    const id_user = decoded.id_user;
+    const user_id = decoded.user_id;
 
     const id_chat_str = req.nextUrl.pathname.split("/").pop();
     const id_chat = parseInt(id_chat_str || "");
@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
     const db = await getDBInstance();
     const [rows]: any = await db.execute(
       `SELECT * FROM Chats WHERE chat_id = ? AND (author_id = ? OR receiver_id = ?)`,
-      [id_chat, id_user, id_user]
+      [id_chat, user_id, user_id]
     );
     if (rows.length === 0) return NextResponse.json({ success: false, message: "Chat non trouvé" }, { status: 404 });
 
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
     let encrypted = cipher.update(message, "utf8", "hex");
     encrypted += cipher.final("hex");
 
-    const newMsg = { auteur: id_user, msg: encrypted, iv: iv.toString("hex"), timestamp: Date.now() };
+    const newMsg = { auteur: user_id, msg: encrypted, iv: iv.toString("hex"), timestamp: Date.now() };
     const msgs = chat.encrypted_msg ? JSON.parse(chat.encrypted_msg) : [];
     msgs.push(newMsg);
 
