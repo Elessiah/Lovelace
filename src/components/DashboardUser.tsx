@@ -58,6 +58,8 @@ export default function DashboardUser({endpoint}: Props) {
                 isRequired={false}
                 type={"number"}
                 endpoint={endpoint}
+                min={0}
+                max={120}
             />
             <InputCustom
                 componentName={"email"}

@@ -21,7 +21,7 @@ export function POST(req: NextRequest, { params } : DynParams ) : Promise<NextRe
             return NextResponse.json({success: false, message: "Vous ne pouvez pas accéder au dashboard de quelqu'un d'autre"}, {status: 403});
         }
 
-        const value: string = await req.json();
+        const value: string = (await req.json()).value;
         try {
             const db = await getDBInstance();
             await db.execute(`UPDATE Users

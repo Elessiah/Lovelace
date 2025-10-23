@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 
 type Props = {
     componentName: string;
@@ -11,8 +11,8 @@ type Props = {
     max?: number;
 }
 
-export default function InputCustom({ componentName, displayName, currentValue, isRequired = false, type = "text", endpoint, min, max }: Props) {
-    let valueOG : string = currentValue;
+export default function InputCustom({ componentName, displayName, currentValue, isRequired = false, type = "text", endpoint, min = undefined, max = undefined }: Props) {
+    const valueOG = useRef(currentValue);
     const [value, setValue] = useState(currentValue);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
@@ -22,8 +22,14 @@ export default function InputCustom({ componentName, displayName, currentValue, 
         if (error)
             setError(null);
 
-        if (value == valueOG)
+        if (value == valueOG.current)
             return;
+
+        if (min !== undefined && max !== undefined && (Number(value) < min || Number(value) > max)) {
+            setError("Merci d'entrée une valeur cohérente");
+            setValue(currentValue);
+            return;
+        }
 
         const res = await fetch(endpoint + "/" + componentName,
             { method: "POST", body: JSON.stringify({value}) });
@@ -34,7 +40,7 @@ export default function InputCustom({ componentName, displayName, currentValue, 
             return;
         }
 
-        valueOG = value;
+        valueOG.current = value;
         setSuccess(true);
         setTimeout(() => {
             setSuccess(false);
@@ -54,6 +60,8 @@ export default function InputCustom({ componentName, displayName, currentValue, 
                         className={"input-input"}
                         onBlur={e => handleSubmit() }
                         onKeyUp={e => { if (e.key === "Enter") { handleSubmit(); } } }
+                        min={min}
+                        max={max}
                     />
             </div>
             {error && <div role="alert" className={"div-alert-error"}>{error}</div>}
