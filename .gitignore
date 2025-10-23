@@ -80,7 +80,8 @@ next-env.d.ts
 UPLOADED_FILES
 
 # pp files
-public/IMG_DATA
+public/IMG_DATA/*
+!public/IMG_DATA/pp_0.png
 
 # nginx
 nginx
