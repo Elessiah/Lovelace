@@ -7,11 +7,12 @@ import path from "path"
 import { sendConfirmationEmail } from "@/lib/mailer"
 
  type registerData = {
-  role : "User" | "Model"
-  firstname : string
-  lastname : string
-  email : string
-  password : string
+  role : "User" | "Model";
+  firstname : string;
+  lastname : string;
+  age: number;
+  email : string;
+  password : string;
  };
 
 export async function POST(req: NextRequest) {
@@ -20,7 +21,7 @@ export async function POST(req: NextRequest) {
     const status = "pending"
 
     // Champs manquants
-    if (!data.email || !data.password || !data.firstname || !data.role || (data.role == "Model" && !data.lastname)) {
+    if (!data.email || !data.password || !data.firstname || !data.age || !data.role || (data.role == "Model" && !data.lastname)) {
       return NextResponse.json({ success: false, message: "Missing fields" }, { status: 400 })
     }
 
@@ -44,8 +45,8 @@ export async function POST(req: NextRequest) {
     const hash = await bcrypt.hash(data.password, 10)
 
     // Insertion
-    const sql = "INSERT INTO Users (role, last_name, first_name, email, hash, status, pp_path) VALUES (?, ?, ?, ?, ?, ?, ?)"
-    const [result]: any = await db.execute(sql, [data.role, data.lastname, data.firstname, data.email, hash, status, ""])
+    const sql = "INSERT INTO Users (role, last_name, first_name, age, email, hash, status, pp_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+    const [result]: any = await db.execute(sql, [data.role, data.lastname, data.firstname, data.age, data.email, hash, status, ""])
     const user_id = result.insertId
 
     // Photo de profil

@@ -2,7 +2,7 @@
 "use client";
 import React, { useState } from 'react';
 import { Eye, EyeOff } from "lucide-react";
-import "./RegisterLoginMenu.css";
+import "./Menu.css";
 import {redirect} from "next/navigation";
 
 type Props = {
@@ -14,7 +14,7 @@ export default function RegisterMenu({ targetOnSuccess = "/", endpoint = '/api/r
     const [role, setRole] = useState('User');
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
-    const [age, setAge] = useState(20);
+    const [age, setAge] = useState("20");
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -43,7 +43,7 @@ export default function RegisterMenu({ targetOnSuccess = "/", endpoint = '/api/r
             const res = await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ role: role, firstname: firstname, lastname: lastname, email: email, password: password }),
+                body: JSON.stringify({ role: role, firstname: firstname, lastname: lastname, age: age, email: email, password: password }),
             });
 
             if (!res.ok) {
@@ -57,7 +57,7 @@ export default function RegisterMenu({ targetOnSuccess = "/", endpoint = '/api/r
             setRole('User');
             setFirstname('');
             setLastname('');
-            setAge(20);
+            setAge("20");
             setEmail('');
             setPassword('');
             setConfirm('');
@@ -127,11 +127,7 @@ export default function RegisterMenu({ targetOnSuccess = "/", endpoint = '/api/r
                         id="age"
                         name="age"
                         value={age}
-                        onChange={e => {
-                            const n = e.target.valueAsNumber;
-                            setAge(Number.isNaN(n) ? 0 : n)
-                            }
-                        }
+                        onChange={e => setAge(e.target.value)}
                         min={0}
                         max={120}
                         className="input-input"
@@ -157,6 +153,7 @@ export default function RegisterMenu({ targetOnSuccess = "/", endpoint = '/api/r
                             id="password"
                             type={showPassword ? "text" : "password"}
                             value={password}
+                            autoComplete={"new-password"}
                             onChange={e => setPassword(e.target.value)}
                             required
                             className="input-input"
@@ -179,6 +176,7 @@ export default function RegisterMenu({ targetOnSuccess = "/", endpoint = '/api/r
                             id="confirm"
                             type={showPassword ? "text" : "password"}
                             value={confirm}
+                            autoComplete={"new-password"}
                             onChange={e => setConfirm(e.target.value)}
                             required
                             className="input-input"

@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
 
     const [rows]: any = await db.execute(
-      `SELECT user_id, email, first_name, last_name, role, status, pp_path FROM Users WHERE user_id = ?`,
+      `SELECT user_id, email, first_name, last_name, age, role, status, pp_path FROM Users WHERE user_id = ?`,
       [decoded.user_id]
     );
     if (!rows.length) return NextResponse.json({ success: false, message: "Utilisateur non trouvé" }, { status: 404 });

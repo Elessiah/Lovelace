@@ -1,7 +1,7 @@
 // components/LoginMenu.tsx
 "use client";
 import React, { useState } from 'react';
-import "./RegisterLoginMenu.css";
+import "./Menu.css";
 import {redirect} from "next/navigation";
 import {Eye, EyeOff} from "lucide-react";
 

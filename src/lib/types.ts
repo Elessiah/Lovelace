@@ -10,6 +10,7 @@ type UserDashboard = {
     email: string,
     first_name: string,
     last_name: string,
+    age: number,
     role: string,
     status: string,
     pp_path: string,

@@ -12,8 +12,8 @@ const WINDOW_MS = 60 * 1000 // 1 minute
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const email = (body.email as string)?.trim()
-    const password = (body.password as string)
+    const email = (body.email as string)
+    const password = (body.password as string);
 
     // récupérer IP
     const ipHeader = req.headers.get("x-forwarded-for")
@@ -44,11 +44,10 @@ export async function POST(req: NextRequest) {
     }
 
     const db = await getDBInstance();
-    // récupérer user
     const [rows]: any = await db.execute(
       "SELECT user_id, hash, role, status FROM Users WHERE email = ?",
       [email]
-    )
+    );
 
     if (!rows || rows.length === 0) {
       return NextResponse.json(
@@ -85,17 +84,17 @@ export async function POST(req: NextRequest) {
     }
 
     // créer JWT (1h)
-    const payload = { user_id: user.user_id, role: user.role }
-    const token = jwt.sign(payload, process.env.JWT_SECRET!, { expiresIn: "1h" })
+    const payload = { user_id: user.user_id, role: user.role };
+    const token = jwt.sign(payload, process.env.JWT_SECRET!, { expiresIn: "1h" });
 
     // stocker le token pour historique ou révocation
     await db.execute(
       "INSERT INTO JWT_Tokens (token, creation_date, user_id, object) VALUES (?, NOW(), ?, ?)",
       [token, user.user_id, "login"]
-    )
+    );
 
     // redirection après login
-    const redirect = `/dashboard/${user.user_id}`
+    const redirect = `/dashboard/${user.user_id}`;
 
     // créer réponse JSON
     const response = NextResponse.json({
@@ -103,7 +102,7 @@ export async function POST(req: NextRequest) {
       message: "Connexion réussie.",
       token,
       redirect,
-    })
+    });
 
     // ajouter cookie HttpOnly
     response.cookies.set({
@@ -114,9 +113,9 @@ export async function POST(req: NextRequest) {
       path: "/",
       sameSite: "strict",
       secure: process.env.NODE_ENV === "production",
-    })
+    });
 
-    return response
+    return response;
   } catch (err) {
     console.error("Erreur POST /api/login :", err)
     return NextResponse.json(

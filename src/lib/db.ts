@@ -28,6 +28,7 @@ async function initTables(db: Pool) {
         role                          TEXT        NOT NULL,
         last_name                     TEXT        NOT NULL,
         first_name                    TEXT        NOT NULL,
+        age                           INT         NOT NULL,
         email                         TEXT        NOT NULL,
         hash                          TEXT        NOT NULL,
         status                        TEXT        NOT NULL,
