@@ -68,4 +68,6 @@ Lors de l’installation, cochez **"Add Python to PATH"** pour pouvoir utiliser 
 
     - JWT_SECRET=""               <--- token de vérification JWT 
 
+(Les variables de mdp ainsi que la variable JWT_SECRET peuvent être générées aléatoirement)
+
 - Deuxième étape : Lancer le fichier init.py 

@@ -128,12 +128,6 @@ def builder():
     else:
         print("Folder UPLOADED_FILES already exist")
 
-    if not os.path.exists("public/IMG_DATA"):
-        os.makedirs("public/IMG_DATA")
-        print("Folder public/IMG_DATA created")
-    else:
-        print("Folder public/IMG_DATA already exist")
-
     if not os.path.exists("nginx"):
         os.makedirs("nginx")
         print("Folder nginx created")
