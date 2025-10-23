@@ -45,6 +45,7 @@ a {
   }
 } */
 
+/* Buttons CTA */
 .ctaButton{
   background-color: var(--pink);
   color: var(--foreground);
@@ -54,6 +55,11 @@ a {
   font-size: 1.2em;
   font-weight: bold;
   cursor: pointer;
+}
+
+.ctaButton:hover{
+  background-color: var(--cherry);
+  color: var(--background);
 }
 
 h2 {
@@ -74,6 +80,11 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.navMenu{
+  display: flex;
+  gap: 2rem;
 }
 
 /* NavBar burger */
@@ -116,10 +127,28 @@ h2 {
 .menu{
   display: none;
   position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  background-color: var(--cherry);
+  text-align: center;
+  padding: 0.5rem 0;
 }
 
 .menu.open{
   display: block;
+}
+
+.menu.open ul li{
+  margin: 2rem 0;
+}
+
+/* Footer */
+.footer{
+    background: var(--pink);
+    margin-top: 6%;
+    padding: 6% 15%;
 }
 
 
