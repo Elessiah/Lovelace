@@ -19,7 +19,7 @@ export default function Dashboard() {
       <div className={"dashboard"}>
         <Header />
         <div className={"dashboards-container"}>
-          <DashboardUser endpoint={`/api/dashboard/user/${user_id}`}/>
+          <DashboardUser endpoint={`/api/user/${user_id}`}/>
         </div>
       </div>
   )
