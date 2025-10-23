@@ -89,10 +89,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className={styles.footer}>
-        <p>&copy; 2025 Lovelace. Tous droits réservés.</p>
-        <Link href="/legal">Mentions légales</Link>
-      </div>
     </div>
   )
 }
