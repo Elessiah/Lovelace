@@ -27,6 +27,7 @@ export async function GET(req: NextRequest, {params} : DynParams): Promise<NextR
             }
 
             const user: UserDashboard = rows[0];
+            user.age = Number(user.age);
             if (user.status !== "active")
                 return NextResponse.json({
                     success: false,

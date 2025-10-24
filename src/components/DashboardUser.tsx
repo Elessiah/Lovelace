@@ -25,7 +25,6 @@ export default function DashboardUser({endpoint}: Props) {
         fetchUser();
     }, [endpoint]);
 
-    console.log(user);
     if (user == null)
         return (<>Chargement...</>);
     return (
