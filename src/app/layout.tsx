@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ClientWrapper from "./components/ClientWrapper"; // <- import
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,7 +30,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <ClientWrapper>
+          <Navbar />
           {children} {/* Tout ce qui est client (useSearchParams, useState...) est dans le suspense */}
+          <Footer />
         </ClientWrapper>
       </body>
     </html>

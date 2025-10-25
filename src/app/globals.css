@@ -1,12 +1,16 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #F9E9EC;
+  --foreground: #0E1C36;
+  --pink: #F88DAD;
+  --cherry: #D1345B;
+  --blue: #66CED6;
+
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0E1C36;
+    --foreground: #F9E9EC;
   }
 }
 
@@ -35,8 +39,117 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
+} */
+
+/* Buttons CTA */
+.ctaButton{
+  background-color: var(--pink);
+  color: var(--foreground);
+  border: none;
+  padding: 4% 6%;
+  border-radius: 50px;
+  font-size: 1.2em;
+  font-weight: bold;
+  cursor: pointer;
 }
+
+.ctaButton:hover{
+  background-color: var(--cherry);
+  color: var(--background);
+}
+
+h2 {
+    color: var(--cherry);
+}
+
+/* Navbar */
+.navBarWrapper{
+  background-color: var(--cherry);
+  padding: 5%;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  color: var(--background);
+}
+
+.navBar{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navMenu{
+  display: flex;
+  gap: 2rem;
+}
+
+/* NavBar burger */
+.menuButton{
+  display: none;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+}
+
+.barBurgerMenu{
+  display: block;
+  width: 25px;
+  height: 3px;
+  background: var(--background);
+  margin: 5px 0;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.barBurgerMenu.open:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.barBurgerMenu.open:nth-child(2) {
+  opacity: 0;
+}
+.barBurgerMenu.open:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.menu ul{
+  list-style: none;
+}
+.menu a:hover{
+  color: var(--foreground);
+}
+
+.menuButton{
+  display: inline;
+}
+.menu{
+  display: none;
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  background-color: var(--cherry);
+  text-align: center;
+  padding: 0.5rem 0;
+}
+
+.menu.open{
+  display: block;
+}
+
+.menu.open ul li{
+  margin: 2rem 0;
+}
+
+/* Footer */
+.footer{
+    background: var(--pink);
+    margin-top: 6%;
+    padding: 6% 15%;
+}
+
+
+
