@@ -17,7 +17,7 @@ export default function DashboardModel({endpoint}: Props) {
             if (res.ok) {
                 const {data} = await res.json();
                 setAmbassadorInfo(data);
-            } else {
+            } else if (res.status != 404) {
                 redirect("/login");
             }
         }

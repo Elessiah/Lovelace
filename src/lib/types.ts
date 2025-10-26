@@ -46,3 +46,8 @@ type AmbassadorInfo = {
     pitch: string,
     projects: Project[],
 }
+
+type ErrorReturn = {
+    message: string,
+    status: number,
+}

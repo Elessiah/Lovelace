@@ -1,18 +1,22 @@
-import {NextRequest, NextResponse} from "next/server";
-import { secureRequest } from "@/lib/secureRequest";
 import {getDBInstance} from "@/lib/db";
 
-type DynParams = {
-    params: {
-        id: string;
-    }
+type Props = {
+    user_id?: number | null;
+    model_id?: number | null;
 }
 
-export async function GET(req: NextRequest, {params}: DynParams): Promise<NextResponse> {
+export default async function getAmbassadorInfo({user_id = null, model_id = null} : Props): Promise<AmbassadorInfo | ErrorReturn> {
     try {
-        const data: {id: string} = (await params) as { id: string };
-        const ambassador_id: number = Number(data.id);
+        let target: string;
+        const targetValue: number | null = user_id || model_id;
 
+        if (targetValue === null)
+            return ({message: "Missing parameters ! Need 'user_id' or 'model_id' !", status: 500});
+
+        if (user_id != null)
+            target = "Ambassador_Info.user_id = ?";
+        else
+            target = "Ambassador_Info.ambassador_id = ?";
         const db = await getDBInstance();
 
         let [rows]: any = await db.execute(`SELECT
@@ -31,15 +35,15 @@ export async function GET(req: NextRequest, {params}: DynParams): Promise<NextRe
                                               FROM Ambassador_Info
                                               INNER JOIN Users ON Users.user_id = Ambassador_Info.user_id
                                               LEFT JOIN Fields ON Fields.field_id = Ambassador_Info.field_id
-                                              WHERE Ambassador_Info.ambassador_id = ?`, [ambassador_id]);
+                                              WHERE ${target}`, [targetValue]);
         if (!rows || !rows.length) {
-            return NextResponse.json({success: false, message: "Utilisateur non trouvé"}, {status: 404});
+            return ({message: "Ambassadrice non trouvé", status: 404});
         }
 
         const ambassadorInfo: AmbassadorInfo | null = rows[0] || null;
 
         if (!ambassadorInfo) {
-            return NextResponse.json({success: false, message: "Internal Error"}, {status: 500})
+            return ({message: "Internal Error", status: 500})
         }
 
         ambassadorInfo.age = Number(ambassadorInfo.age);
@@ -47,9 +51,9 @@ export async function GET(req: NextRequest, {params}: DynParams): Promise<NextRe
         [rows] = await db.execute(`SELECT * FROM Projects WHERE ambassador_id = ?`, [ambassadorInfo.ambassador_id]);
 
         ambassadorInfo.projects = rows[0] || [];
-        return NextResponse.json({success: true, message: "", data: {...ambassadorInfo}}, {status: 200});
+        return (ambassadorInfo);
     } catch (error: unknown) {
         const errorMsg: string = (error as {message: string})?.message || "";
-        return NextResponse.json({success: false, message: errorMsg}, {status: 500})
+        return ({message: errorMsg, status: 500})
     }
 }

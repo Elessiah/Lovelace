@@ -26,7 +26,7 @@ export default function DashboardUser({endpoint}: Props) {
     }, [endpoint]);
 
     if (user == null)
-        return (<>Chargement...</>);
+        return (<></>);
     return (
         <div className="container">
             <h1 className={"title-menu"}>
@@ -62,7 +62,7 @@ export default function DashboardUser({endpoint}: Props) {
             />
             <InputCustom
                 componentName={"email"}
-                displayName={"Email"}
+                displayName={"Email (Information confidentielle)"}
                 currentValue={user.email}
                 isRequired={false}
                 type={"email"}
