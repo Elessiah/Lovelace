@@ -1,7 +1,7 @@
 import {NextRequest, NextResponse} from "next/server";
 import {secureRequest} from "@/lib/secureRequest";
 import {getDBInstance} from "@/lib/db";
-import { checkEditRightsModel } from "@/lib/checkEditRightsModel";
+import checkEditRightsModel from "@/lib/checkEditRightsModel";
 
 type paramsContent = {
     id: string;
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest, { params } : DynParams ) : Promise<
     return secureRequest(req, async (req, user_id, data): Promise<NextResponse> => {
         const params: paramsContent = await data as paramsContent;
         const columnName: string = params.column;
-        const model_id : string = params.id;
+        const model_id : number = Number(params.id);
 
         try {
             const db = await getDBInstance();

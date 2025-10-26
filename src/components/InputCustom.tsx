@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {JSX, useEffect, useRef, useState} from "react";
 
 type Props = {
     componentName: string;
@@ -9,9 +9,20 @@ type Props = {
     endpoint: string;
     min?: number;
     max?: number;
+    style?: React.CSSProperties;
 }
 
-export default function InputCustom({ componentName, displayName, currentValue, isRequired = false, type = "text", endpoint, min = undefined, max = undefined }: Props) {
+export default function InputCustom({
+                                        componentName,
+                                        displayName,
+                                        currentValue,
+                                        isRequired = false,
+                                        type = "text",
+                                        endpoint,
+                                        min = undefined,
+                                        max = undefined,
+                                        style = {}
+                                    }: Props) {
     const valueOG = useRef(currentValue);
     const [value, setValue] = useState(currentValue);
     const [error, setError] = useState<string | null>(null);
@@ -47,11 +58,16 @@ export default function InputCustom({ componentName, displayName, currentValue, 
         }, 5000);
     }
 
+    if (style?.height === undefined && type == "textarea")
+        style.height = "10vh";
+
+    const Tag: keyof JSX.IntrinsicElements = type === "textarea" ? "textarea" : "input";
+
     return (
         <div>
             <div className={"input-container"}>
                 <label htmlFor={componentName} className={"input-font"}>{displayName}</label>
-                    <input
+                    <Tag
                         id={componentName}
                         type={type}
                         value={value}
@@ -62,6 +78,7 @@ export default function InputCustom({ componentName, displayName, currentValue, 
                         onKeyUp={e => { if (e.key === "Enter") { handleSubmit(); } } }
                         min={min}
                         max={max}
+                        style={style}
                     />
             </div>
             {error && <div role="alert" className={"div-alert-error"}>{error}</div>}

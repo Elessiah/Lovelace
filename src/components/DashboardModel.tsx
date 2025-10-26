@@ -56,20 +56,23 @@ export default function DashboardModel({endpoint}: Props) {
             <InputCustom
                 componentName={"company"}
                 displayName={"Entreprise"}
-                currentValue={ambassadorInfo.job}
+                currentValue={ambassadorInfo.company}
                 type={"text"}
                 endpoint={endpoint}
             />
             <InputCustom
                 componentName={"pitch"}
                 displayName={"Slogan / Phrase de motivation"}
-                currentValue={ambassadorInfo.job}
+                currentValue={ambassadorInfo.pitch}
                 type={"textarea"}
                 endpoint={endpoint}
+                style={{ fontStyle: "italic", textAlign: "center" }}
             />
-            <h2 className={"title-menu"}>
-                Projets phares:
-            </h2>
+            {ambassadorInfo.projects.length > 0 &&
+                <h2 className={"title-menu"}>
+                    Projets phares:
+                </h2>
+            }
             {ambassadorInfo.projects.map((project, index) => (
                 <ProjectInput
                     key={index}

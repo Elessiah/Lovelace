@@ -1,7 +1,6 @@
 import {Pool} from "mysql2/promise";
-import {NextResponse} from "next/server";
 
-async function checkEditRightsModel(db: Pool, model_id: number, user_id: number): Promise<boolean> {
+export default async function checkEditRightsModel(db: Pool, model_id: number, user_id: number): Promise<boolean> {
     const [rows] = await db.execute(`SELECT user_id FROM Ambassador_Info WHERE ambassador_id = ?`, [model_id]);
 
     if (!rows || !(rows as unknown[]).length) {
@@ -14,5 +13,3 @@ async function checkEditRightsModel(db: Pool, model_id: number, user_id: number)
     }
     return true;
 }
-
-module.exports = {checkEditRightsModel};
