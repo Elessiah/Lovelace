@@ -7,7 +7,6 @@ import "./login.css";
 export default function Login() {
   return (
       <div className={"div-container"}>
-        <Header />
         <div className={"login-container"}>
           <LoginMenu endpoint={"/api/login"} />
         </div>
