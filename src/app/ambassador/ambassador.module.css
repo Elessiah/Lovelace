@@ -1,0 +1,27 @@
+.profileBannerAmbassador{
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff;
+    height: 50vh;
+    padding: 5%;
+    display: flex;
+    align-items: flex-end;
+}
+
+.titlesBannerAmbassador{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.bannerTexts{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.thematicProfession{
+    display: flex;
+    gap: 0.3rem;
+    justify-content: center;
+}
