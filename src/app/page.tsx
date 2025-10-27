@@ -84,7 +84,7 @@ export default function Home() {
             <h2>Partage ton parcours</h2>
             <p>Tu veux inspirer à ton tour ? <br /> Rejoins la communauté d'ambassadrices et aide à ouvrir de nouveaux horizons.</p>
             <button className="ctaButton">
-              <Link href="/signup">Devenir ambassadrice</Link>
+              <Link href="/register">Devenir ambassadrice</Link>
             </button>
           </div>
         </div>

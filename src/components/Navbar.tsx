@@ -41,7 +41,7 @@ return (
                 ) : (
                         <>
                         <li><Link href="/login" onClick={() => setOpen(false)}>Connexion</Link></li>
-                        <li><Link className='menuCTAButton' href="/signup" onClick={() => setOpen(false)}>Inscription</Link></li>
+                        <li><Link className='menuCTAButton' href="/register" onClick={() => setOpen(false)}>Inscription</Link></li>
                         </>
             )}
                 <li><Link href="/logout" onClick={() => setOpen(false)}>Déconnexion</Link></li>
