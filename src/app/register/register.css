@@ -1,20 +1,19 @@
 .div-container {
+    margin-top: 2rem;
     width: 100%;
-    height: 100vh;
-    background-image: url('../../../public/backgroundMobile.webp');
+    /*background-image: url('../../../public/backgroundMobile.webp');
     background-size: cover;
-    background-position: center;
+    background-position: center;*/
 }
 
 .register-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
 }
 
-@media (min-width: 1024px) {
+/*@media (min-width: 1024px) {
     .div-container {
         background-image: url("../../../public/backgroundHD.webp");
     }
-}
+}*/
