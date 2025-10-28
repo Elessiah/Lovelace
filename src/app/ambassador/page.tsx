@@ -30,13 +30,13 @@ export default function Ambassador() {
                     <Link href="/">Echanger</Link>
                 </button>
             </div>
-            <div className="aboutAmbassador">
+            <div className={styles.aboutAmbassador}>
                 <h2>À propos</h2>
                 <p>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut tortor fringilla, pellentesque purus eget, maximus risus. Integer tincidunt augue eros, et mattis ante porta vitae. Praesent pharetra, odio vel bibendum hendrerit, sapien elit tempor mauris, in fermentum nisi magna vel dui. Proin sed molestie justo. Cras mollis turpis mauris. Maecenas lacinia, enim tristique convallis luctus, urna justo ornare nisi, eu euismod urna diam tempor augue. Donec tincidunt magna id nibh euismod, id ullamcorper nunc lobortis. Pellentesque vel augue quis purus dapibus tincidunt. Nulla luctus egestas venenatis.
                 </p>
             </div>
-            <div className="routeAmbassador">
+            <div className={styles.routeAmbassador}>
                 <h2>Parcours</h2>
                 <ul>
                    <li>2024 — Poste actuel, impact mesurable</li>
@@ -45,19 +45,20 @@ export default function Ambassador() {
                    <li>2017 — Stage / première expérience</li> 
                 </ul>
             </div>
-            <div className="projectsAmbassador">
-                <div className="projectCardAmbassador">
+            <div className={styles.projectsAmbassador}>
+                <h2>Projets phare</h2>
+                <div className={styles.projectCardAmbassador}>
                     <img src="/project1.png" alt="Project 1" />
-                    <div className="projectInfoAmbassador">
+                    <div className={styles.projectInfoAmbassador}>
                         <h3>Projet 1</h3>
                         <p>Description brève du projet 1 et de son impact.</p>
                     </div>
                 </div>
-                <div className="projectCardAmbassador">
+                <div className={styles.projectCardAmbassador}>
                     <img src="/project1.png" alt="Project 1" />
-                    <div className="projectInfoAmbassador">
-                        <h3>Projet 1</h3>
-                        <p>Description brève du projet 1 et de son impact.</p>
+                    <div className={styles.projectInfoAmbassador}>
+                        <h3>Projet 2</h3>
+                        <p>Description brève du projet 2 et de son impact.</p>
                     </div>
                 </div>
                 <div className="ctaContent">
@@ -66,10 +67,10 @@ export default function Ambassador() {
                     </button>
                 </div>
             </div>
-            <div className="quoteAmbassador">
+            <div className={styles.quoteAmbassador}>
                 <p>"Citation inspirante de l'ambassadrice sur son parcours ou sa vision des sciences."</p>
             </div>
-            <div className="advice">
+            <div className={styles.adviceAmbassador}>
                 <h2>Mes conseils</h2>
                 <ul>
                     <li>Fais des projets concrets dès l’école.</li>
