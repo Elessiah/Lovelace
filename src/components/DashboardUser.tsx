@@ -35,7 +35,7 @@ export default function DashboardUser({endpoint}: Props) {
             </h1>
             <PPInput
                 imageUrl={user.pp_path}
-                onChange={(event) => { console.log("Prout"); }}
+                endpoint={endpoint}
             />
             <InputCustom
                 componentName={"first_name"}
