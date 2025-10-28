@@ -12,7 +12,7 @@ export default function Navbar() {
       try {
         const res = await fetch("/api/")
         const data = await res.json()
-        if (data.success) setUserId(data.id_user.toString())
+        if (data.success) setUserId(data.user_id.toString())
       } catch (err) {
         console.error(err)
       }

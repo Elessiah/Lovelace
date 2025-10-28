@@ -1,9 +1,9 @@
 .container {
-    width: 90%;
+    width: 600px;
     background: var(--cherry);
     border-radius: 20px;
     padding: 20px;
-    margin: 0 auto;
+    margin: 2% 0 2% 0;
 }
 
 .title-menu {
@@ -43,7 +43,7 @@ form label {
     font-size: 0.9rem;
     box-sizing: border-box;
     background: var(--pink);
-    color: var(--background);
+    color: #0E1C36;
 }
 
 .input-input:focus {

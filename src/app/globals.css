@@ -1,7 +1,7 @@
 :root {
   --background: #F9E9EC;
   --foreground: #0E1C36;
-  --pink: #F88DAD;
+  --pink: #f8acc2;
   --cherry: #D1345B;
   --blue: #66CED6;
 
@@ -74,6 +74,12 @@ h2 {
   top: 0;
   z-index: 100;
   color: var(--background);
+}
+
+@media(min-width: 1024px){
+  .navBarWrapper{
+    padding: 2.5%;
+  }
 }
 
 .navBar{

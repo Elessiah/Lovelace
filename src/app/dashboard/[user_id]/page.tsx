@@ -10,12 +10,9 @@ export default function Dashboard() {
   const { user_id } = useParams();
 
   return (
-      <div className={"dashboard"}>
-        <Header />
-        <div className={"dashboards-container"}>
-          <DashboardUser endpoint={`/api/user/${user_id}`}/>
-          <DashboardModel endpoint={`/api/model/user_id/${user_id}`}/>
-        </div>
-      </div>
+    <div className={"dashboards-container"}>
+      <DashboardUser endpoint={`/api/user/${user_id}`}/>
+      <DashboardModel endpoint={`/api/model/user_id/${user_id}`}/>
+    </div>
   )
 }
