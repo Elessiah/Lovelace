@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import "./Menu.css";
 
 type Props = {
     imageUrl: string;
@@ -19,34 +20,39 @@ export default function PPInput({ imageUrl, onChange, size = 120 }: Props) {
     }
 
     return (
-        <div
-            onClick={handleClick}
-            style={{
-                width: size,
-                height: size,
-                borderRadius: "50%",
-                overflow: "hidden",
-                cursor: "pointer",
-                position: "relative",
-                background: "#FFFFFF",
-            }}
-        >
-            <img
-                src={imageUrl}
-                alt="Profil"
+        <>
+            <label htmlFor="ppinput" className={"input-font"}>Photo de profil</label>
+            <div
+                onClick={handleClick}
                 style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
+                    width: size,
+                    height: size,
+                    borderRadius: "50%",
+                    overflow: "hidden",
+                    cursor: "pointer",
+                    position: "relative",
+                    background: "#FFFFFF",
                 }}
-            />
-            <input
-                type="file"
-                accept="image/*"
-                ref={fileInputRef}
-                style={{ display: "none" }}
-                onChange={handleFileChange}
-            />
-        </div>
+            >
+                {imageUrl.length &&
+                    <img
+                        src={imageUrl}
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                        }}
+                    />
+                }
+                <input
+                    id="ppinput"
+                    type="file"
+                    accept="image/*"
+                    ref={fileInputRef}
+                    style={{ display: "none" }}
+                    onChange={handleFileChange}
+                />
+            </div>
+        </>
     );
 }

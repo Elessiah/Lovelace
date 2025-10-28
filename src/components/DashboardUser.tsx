@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import InputCustom from "@/components/InputCustom";
 import {redirect} from "next/navigation";
 import "./Menu.css"
+import PPInput from "@/components/PPInput";
 
 type Props = {
     endpoint: string;
@@ -32,6 +33,10 @@ export default function DashboardUser({endpoint}: Props) {
             <h1 className={"title-menu"}>
                 Informations personnelles
             </h1>
+            <PPInput
+                imageUrl={user.pp_path}
+                onChange={(event) => { console.log("Prout"); }}
+            />
             <InputCustom
                 componentName={"first_name"}
                 displayName={user.role == "Model" ? "Prénom" : "Pseudo"}
