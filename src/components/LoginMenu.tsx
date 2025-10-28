@@ -68,6 +68,7 @@ export default function LoginMenu({ endpoint = '/api/login' }: Props) {
                         type="email"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
+                        placeholder="Mail"
                         required
                         className={"input-input"}
                     />
@@ -80,6 +81,7 @@ export default function LoginMenu({ endpoint = '/api/login' }: Props) {
                             id="password"
                             type={showPassword ? "text" : "password"}
                             value={password}
+                            placeholder="Mot de passe"
                             onChange={e => setPassword(e.target.value)}
                             required
                             className="input-input"
