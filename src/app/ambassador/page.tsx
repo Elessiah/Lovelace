@@ -45,6 +45,9 @@ export default function Ambassador() {
                    <li>2017 — Stage / première expérience</li> 
                 </ul>
             </div>
+            <div className={styles.quoteAmbassador}>
+                <p>"Citation inspirante de l'ambassadrice sur son parcours ou sa vision des sciences."</p>
+            </div>
             <div className={styles.projectsAmbassador}>
                 <h2>Projets phare</h2>
                 <div className={styles.projectCardAmbassador}>
@@ -66,9 +69,6 @@ export default function Ambassador() {
                         <Link href="/">Echanger avec l'ambassadrice</Link>
                     </button>
                 </div>
-            </div>
-            <div className={styles.quoteAmbassador}>
-                <p>"Citation inspirante de l'ambassadrice sur son parcours ou sa vision des sciences."</p>
             </div>
             <div className={styles.adviceAmbassador}>
                 <h2>Mes conseils</h2>
