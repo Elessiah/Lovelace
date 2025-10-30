@@ -1,0 +1,101 @@
+.profileBannerAmbassador{
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff;
+    height: 50vh;
+    padding: 5%;
+    display: flex;
+    align-items: flex-end;
+}
+
+.titlesBannerAmbassador{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.bannerTexts{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.thematicProfession{
+    display: flex;
+    gap: 0.3rem;
+    justify-content: center;
+}
+
+/* Section About*/
+.aboutAmbassador{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 8% 10%;
+}
+
+/* Section Route */
+.routeAmbassador{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0% 10%;
+}
+.routeAmbassador ul{
+    list-style-type: none;
+    padding-left: 20px;
+}
+.routeAmbassador ul li{
+    position: relative;
+    margin-bottom: 10px;
+}
+
+/* Section Projects */
+.projectsAmbassador{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 8% 10%;
+}
+.projectsAmbassador h2{
+    margin-bottom: 0.8rem;
+}
+.projectCardAmbassador{
+    margin-bottom: 1.2rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.projectInfoAmbassador{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Section Quote */
+.quoteAmbassador{
+    background-color: var(--cherry);
+    color: var(--background);
+    padding: 5% 10%;
+    font-style: italic;
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+/* Section Advice */
+.adviceAmbassador{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 8% 10%;
+}
+.adviceAmbassador ul{
+    list-style-type: disc;
+    padding-left: 20px;
+}
+.adviceAmbassador ul li{
+    position: relative;
+    margin-bottom: 10px;
+    padding-left: 2%;
+}
