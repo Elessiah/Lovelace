@@ -88,6 +88,7 @@ export default function RegisterMenu({ targetOnSuccess = "/", endpoint = '/api/r
                             <input
                                 id="firstname"
                                 type="text"
+                                placeholder="Prénom"
                                 value={firstname}
                                 onChange={e => setFirstname(e.target.value)}
                                 required
@@ -98,6 +99,7 @@ export default function RegisterMenu({ targetOnSuccess = "/", endpoint = '/api/r
                             <label htmlFor="lastname" className={"input-font"}>Nom</label>
                             <input
                                 id="lastname"
+                                placeholder="Nom de famille"
                                 type="text"
                                 value={lastname}
                                 onChange={e => setLastname(e.target.value)}
@@ -111,6 +113,7 @@ export default function RegisterMenu({ targetOnSuccess = "/", endpoint = '/api/r
                         <label htmlFor={"pseudo"} className={"input-font"}>Pseudo</label>
                         <input
                             id={"pseudo"}
+                            placeholder="Pseudo"
                             type={"text"}
                             value={firstname}
                             onChange={e => setFirstname(e.target.value)}
@@ -126,6 +129,7 @@ export default function RegisterMenu({ targetOnSuccess = "/", endpoint = '/api/r
                         type="number"
                         id="age"
                         name="age"
+                        placeholder="Age"
                         value={age}
                         onChange={e => setAge(e.target.value)}
                         min={0}
@@ -139,6 +143,7 @@ export default function RegisterMenu({ targetOnSuccess = "/", endpoint = '/api/r
                     <input
                         id="email"
                         type="email"
+                        placeholder="Adresse e-mail"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                         required
@@ -151,6 +156,7 @@ export default function RegisterMenu({ targetOnSuccess = "/", endpoint = '/api/r
                     <div className="password-wrapper">
                         <input
                             id="password"
+                            placeholder="Mot de passe"
                             type={showPassword ? "text" : "password"}
                             value={password}
                             autoComplete={"new-password"}
@@ -174,6 +180,7 @@ export default function RegisterMenu({ targetOnSuccess = "/", endpoint = '/api/r
                     <div className="password-wrapper">
                         <input
                             id="confirm"
+                            placeholder="Mot de passe à confirmer"
                             type={showPassword ? "text" : "password"}
                             value={confirm}
                             autoComplete={"new-password"}

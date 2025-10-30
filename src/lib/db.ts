@@ -91,7 +91,7 @@ async function initTables(db: Pool) {
     await db.query(`
       CREATE TABLE IF NOT EXISTS Fields (
         field_id                       INT        AUTO_INCREMENT        PRIMARY KEY,
-        display_name                   TEXT       NOT NULL
+        domain_name                   TEXT       NOT NULL
       )
     `);
 

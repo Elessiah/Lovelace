@@ -1,6 +1,7 @@
 import {NextRequest, NextResponse} from "next/server";
 import {secureRequest} from "@/lib/secureRequest";
 import {getDBInstance} from "@/lib/db";
+import checkEditRightsModel from "@/lib/checkEditRightsModel";
 
 type paramsContent = {
     id: string;
@@ -11,22 +12,22 @@ type DynParams = {
     params: paramsContent;
 }
 
-export function POST(req: NextRequest, { params } : DynParams ) : Promise<NextResponse> {
+export async function POST(req: NextRequest, { params } : DynParams ) : Promise<NextResponse> {
     return secureRequest(req, async (req, user_id, data): Promise<NextResponse> => {
         const params: paramsContent = await data as paramsContent;
         const columnName: string = params.column;
-        const requested_user_id : string = params.id;
+        const model_id : number = Number(params.id);
 
-        if (Number(requested_user_id) != user_id) {
-            return NextResponse.json({success: false, message: "Vous ne pouvez pas accéder au dashboard de quelqu'un d'autre"}, {status: 403});
-        }
-
-        const value: string = await req.json();
         try {
             const db = await getDBInstance();
-            await db.execute(`UPDATE Users
+
+            if (!await checkEditRightsModel(db, model_id, user_id))
+                return NextResponse.json({success: false, message: "Tableau de bord inaccessible ou inexistant"}, {status: 403})
+
+            const value: string = (await req.json()).value;
+            await db.execute(`UPDATE Ambassador_Info
                               SET ${columnName} = ?
-                              WHERE user_id = ?`, [value, requested_user_id]);
+                              WHERE ambassador_id = ?`, [value, model_id]);
             return NextResponse.json({success: true, message: ""}, {status: 200});
         } catch (error) {
             const errorMsg: string = (error as {message: string})?.message || "";

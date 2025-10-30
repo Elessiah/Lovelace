@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {JSX, useEffect, useRef, useState} from "react";
 
 type Props = {
     componentName: string;
@@ -9,10 +9,21 @@ type Props = {
     endpoint: string;
     min?: number;
     max?: number;
+    style?: React.CSSProperties;
 }
 
-export default function InputCustom({ componentName, displayName, currentValue, isRequired = false, type = "text", endpoint, min, max }: Props) {
-    let valueOG : string = currentValue;
+export default function InputCustom({
+                                        componentName,
+                                        displayName,
+                                        currentValue,
+                                        isRequired = false,
+                                        type = "text",
+                                        endpoint,
+                                        min = undefined,
+                                        max = undefined,
+                                        style = {}
+                                    }: Props) {
+    const valueOG = useRef(currentValue);
     const [value, setValue] = useState(currentValue);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
@@ -22,8 +33,14 @@ export default function InputCustom({ componentName, displayName, currentValue, 
         if (error)
             setError(null);
 
-        if (value == valueOG)
+        if (value == valueOG.current)
             return;
+
+        if (min !== undefined && max !== undefined && (Number(value) < min || Number(value) > max)) {
+            setError("Merci d'entrée une valeur cohérente");
+            setValue(currentValue);
+            return;
+        }
 
         const res = await fetch(endpoint + "/" + componentName,
             { method: "POST", body: JSON.stringify({value}) });
@@ -34,18 +51,23 @@ export default function InputCustom({ componentName, displayName, currentValue, 
             return;
         }
 
-        valueOG = value;
+        valueOG.current = value;
         setSuccess(true);
         setTimeout(() => {
             setSuccess(false);
         }, 5000);
     }
 
+    if (style?.height === undefined && type == "textarea")
+        style.height = "10vh";
+
+    const Tag: keyof JSX.IntrinsicElements = type === "textarea" ? "textarea" : "input";
+
     return (
         <div>
             <div className={"input-container"}>
                 <label htmlFor={componentName} className={"input-font"}>{displayName}</label>
-                    <input
+                    <Tag
                         id={componentName}
                         type={type}
                         value={value}
@@ -54,6 +76,9 @@ export default function InputCustom({ componentName, displayName, currentValue, 
                         className={"input-input"}
                         onBlur={e => handleSubmit() }
                         onKeyUp={e => { if (e.key === "Enter") { handleSubmit(); } } }
+                        min={min}
+                        max={max}
+                        style={style}
                     />
             </div>
             {error && <div role="alert" className={"div-alert-error"}>{error}</div>}

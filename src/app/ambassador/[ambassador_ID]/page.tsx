@@ -1,9 +1,31 @@
 "use client";
 
+import { useEffect, useState } from "react"
 import Link from "next/link";
 import "./ambassador.css";
+import { redirect, useParams } from "next/navigation";
 
 export default function Ambassador() {
+
+    const { ambassador_ID} = useParams();
+    const [ambassadorInfo, setAmbassadorInfo] = useState<AmbassadorInfo | null>(null);
+
+        useEffect(() => {
+            async function fetchData() {
+                const res: Response = await fetch(`/api/model/model_id/${ambassador_ID}`);
+                if (res.ok) {
+                    const {data} = await res.json();
+                    setAmbassadorInfo(data);
+                } else if (res.status != 404) {
+                    redirect("/");
+                }
+            }
+
+            fetchData();
+        }, []);
+        if (ambassadorInfo == null)
+        return (<>Chargement...</>);
+
   return (
     <div className={"pageWrapper"}>
         <div className={"mainWrapper"}>
@@ -11,12 +33,12 @@ export default function Ambassador() {
                 <div className={"bannerTexts"}>
                     <div className={"titlesBannerAmbassador"}>
                         <div className={"titleNameAmbassador"}>
-                            <h1>Nom</h1>
-                            <h1>Prénom</h1>
+                            <h1>{ambassadorInfo.last_name}</h1>
+                            <h1>{ambassadorInfo.first_name}</h1>
                         </div>
                         <div className={"titleJobAmbassador"}>
-                            <h2>Métier</h2>
-                            <h2>Entreprise</h2>
+                            <h2>{ambassadorInfo.job}</h2>
+                            <h2>{ambassadorInfo.company}</h2>
                         </div>
                     </div>
                     <div className={"thematicProfession"}>
@@ -32,7 +54,7 @@ export default function Ambassador() {
             <div className={"aboutAmbassador"}>
                 <h2>À propos</h2>
                 <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut tortor fringilla, pellentesque purus eget, maximus risus. Integer tincidunt augue eros, et mattis ante porta vitae. Praesent pharetra, odio vel bibendum hendrerit, sapien elit tempor mauris, in fermentum nisi magna vel dui. Proin sed molestie justo. Cras mollis turpis mauris. Maecenas lacinia, enim tristique convallis luctus, urna justo ornare nisi, eu euismod urna diam tempor augue. Donec tincidunt magna id nibh euismod, id ullamcorper nunc lobortis. Pellentesque vel augue quis purus dapibus tincidunt. Nulla luctus egestas venenatis.
+                    {ambassadorInfo.biography}
                 </p>
             </div>
             <div className={"routeAmbassador"}>
@@ -44,31 +66,28 @@ export default function Ambassador() {
                    <li>2017 — Stage / première expérience</li> 
                 </ul>
             </div>
+            <div className={"quoteAmbassador"}>
+                <p>{ambassadorInfo.pitch}</p>
+            </div>
             <div className={"projectsAmbassador"}>
-                <div className={"projectCardAmbassador"}>
-                    <img src="/project1.png" alt="Project 1" />
+                <h2>Projets phare</h2>
+                {ambassadorInfo.projects.map((project: Project, index: number) => (
+                    <div key={index} className={"projectCardAmbassador"}>
+                    <img src={project.project_photo_path} />
                     <div className={"projectInfoAmbassador"}>
-                        <h3>Projet 1</h3>
-                        <p>Description brève du projet 1 et de son impact.</p>
+                        <h3>{project.project_title}</h3>
+                        <p>{project.project_description}</p>
                     </div>
                 </div>
-                <div className={"projectCardAmbassador"}>
-                    <img src="/project1.png" alt="Project 1" />
-                    <div className={"projectInfoAmbassador"}>
-                        <h3>Projet 1</h3>
-                        <p>Description brève du projet 1 et de son impact.</p>
-                    </div>
-                </div>
+                ))}
+
                 <div className={"ctaContent"}>
                     <button className={"ctaButton"}>
                         <Link href="/">Echanger avec l'ambassadrice</Link>
                     </button>
                 </div>
             </div>
-            <div className={"quoteAmbassador"}>
-                <p>"Citation inspirante de l'ambassadrice sur son parcours ou sa vision des sciences."</p>
-            </div>
-            <div className={"advice"}>
+            <div className={"adviceAmbassador"}>
                 <h2>Mes conseils</h2>
                 <ul>
                     <li>Fais des projets concrets dès l’école.</li>
