@@ -1,4 +1,4 @@
-import React, {JSX, useEffect, useRef, useState} from "react";
+import React, {JSX, useRef, useState} from "react";
 
 type Props = {
     componentName: string;
@@ -10,6 +10,9 @@ type Props = {
     min?: number;
     max?: number;
     style?: React.CSSProperties;
+    customSubmit?: (value: unknown) => void;
+    placeholder?: string;
+    dataRef?: React.RefObject<string>;
 }
 
 export default function InputCustom({
@@ -21,7 +24,10 @@ export default function InputCustom({
                                         endpoint,
                                         min = undefined,
                                         max = undefined,
-                                        style = {}
+                                        style = {},
+                                        customSubmit = undefined,
+                                        placeholder = undefined,
+                                        dataRef = undefined,
                                     }: Props) {
     const valueOG = useRef(currentValue);
     const [value, setValue] = useState(currentValue);
@@ -30,6 +36,8 @@ export default function InputCustom({
 
     async function handleSubmit()
     {
+        if (customSubmit)
+            return customSubmit(value);
         if (error)
             setError(null);
 
@@ -71,7 +79,7 @@ export default function InputCustom({
                         id={componentName}
                         type={type}
                         value={value}
-                        onChange={e => setValue(e.target.value)}
+                        onChange={e => {if (dataRef) {dataRef.current = e.target.value;} setValue(e.target.value); }}
                         required={isRequired}
                         className={"input-input"}
                         onBlur={e => handleSubmit() }
@@ -79,6 +87,7 @@ export default function InputCustom({
                         min={min}
                         max={max}
                         style={style}
+                        placeholder={placeholder}
                     />
             </div>
             {error && <div role="alert" className={"div-alert-error"}>{error}</div>}

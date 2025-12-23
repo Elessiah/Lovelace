@@ -105,6 +105,14 @@
     border-radius: 20px;
 }
 
+.filters {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
 /* Share Route Section */
 .shareRoute{
     padding: 3% 15%;
